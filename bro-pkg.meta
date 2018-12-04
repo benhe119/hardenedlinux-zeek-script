@@ -1,0 +1,6 @@
+[package]
+description = Harededlinux Bro script Repo
+tags = private
+script_dir = test-app
+depends =
+    bro >=2.6.0
