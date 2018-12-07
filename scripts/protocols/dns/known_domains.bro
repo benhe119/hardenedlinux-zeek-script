@@ -25,9 +25,9 @@ export {
   ## inspect if an address has been seen in use.
   ## Maintain the list of known hosts for 24 hours so that the existence
   ## of each individual address is logged each day.
-  global known_domains: set[string] &create_expire=1 day &synchronized &redef;
+global known_domains: set[string] &create_expire=1 day  &redef;
 
-  ## An event that can be handled to access the :bro:type:`Known::HostsInfo`
+## An event that can be handled to access the :bro:type:`Known::HostsInfo`
   ## record as it is sent on to the logging framework.
   global log_known_domains: event(rec: Info);
 }
@@ -37,8 +37,8 @@ event bro_init()
   Log::create_stream(MOCYBER::UNIQDNS_LOG, [$columns=Info, $ev=log_known_domains, $path="known_domains"]);
   local f = Log::get_filter(MOCYBER::UNIQDNS_LOG, "default");
   #f$interv = 15 min;
-  Log::add_filter(CyberDev::UNIQDNS_LOG, f);
-}
+  Log::add_filter(MOCYBER::UNIQDNS_LOG, f);
+  }
 
 event dns_query_reply(c: connection, msg: dns_msg, query: string, qtype: count, qclass: count)
 {

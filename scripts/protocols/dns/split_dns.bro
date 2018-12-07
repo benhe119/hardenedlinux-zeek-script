@@ -1,14 +1,15 @@
-function dns_fuc(id: Log::ID. path: string, recL DNS::Info) : string
+@load base/frameworks/logging/main.bro
+function dns_fuc(id: Log::ID, path: string, rec: DNS::Info) : string
 {
 if ( rec?$qtype_name && rec$qtype_name == "NB") {
-    return  "dns-netbios"
- }
- return "dns-minimal";
+  return  "dns-netbios";
+  }
+return "dns-minimal";
 }      
 event bro_init()
 {
-    log::remove_default_filter(DNS::LOG);
-    log:add_filter(DNS::LOG, [$name="new-default",
-    $include=set("ts","id.orig_h","query"),
-    $bro_fuc]);
+Log::remove_default_filter(DNS::LOG);
+Log::add_filter(DNS::LOG, [$name="new-default",
+$include=set("ts","id.orig_h","query"),
+$path_func=dns_fuc]);
 }
