@@ -17,12 +17,12 @@ event connection_established(c: connection)
 	     c$resp$state == TCP_ESTABLISHED )
 		{
 		Intel::seen([
-			$indicator = cat(c$id$orig_h, ":", c$id$orig_p),
+			$indicator = cat(c$id$orig_h, ":", port_to_count(c$id$orig_p)),
 			$indicator_type = Intel::CONN_TCP,
 			$where = Conn::IN_ORIG,
 			$conn = c]);
 		Intel::seen([
-			$indicator = cat(c$id$resp_h, ":", c$id$resp_p),
+			$indicator = cat(c$id$resp_h, ":", port_to_count(c$id$resp_p)),
 			$indicator_type = Intel::CONN_TCP,
 			$where = Conn::IN_RESP,
 			$conn = c]);
