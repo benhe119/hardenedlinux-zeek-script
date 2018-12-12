@@ -3,10 +3,11 @@
 # 
 # Contributed by Bob Rotsted
 
+#Modifid by hardenedlinux
 module TrackDHCP;
 
 export {
-  global ip_to_mac: table[addr] of string &synchronized &write_expire=1day; 
+  global ip_to_mac: table[addr] of string  &write_expire=1day; 
 
 redef record Conn::Info += {
   orig_mac: string &optional &log;
@@ -15,7 +16,7 @@ redef record Conn::Info += {
 }
 
 event DHCP::log_dhcp (rec: DHCP::Info) { 
-  ip_to_mac[rec$assigned_ip] = rec$mac;
+  ip_to_mac[rec$assigned_addr] = rec$mac;
   }
 
 event connection_state_remove (c: connection) { 

@@ -18,7 +18,8 @@
 ##!
 ##! orig-traffic-summary.bro is a script that reports the % of traffic
 ##! for each tracked protocol from origin to destination.
-##!
+##! Modified by hardenedlinux
+@load packages/bro-sumstats-counttable
 
 module OrigTrafficSummary;
 
@@ -61,12 +62,12 @@ type Info: record {
 
 event bro_init()
   {
-  local rec: OrigTrafficSummary::Info;
+  #local rec: OrigTrafficSummary::Info;
   Log::create_stream(OrigTrafficSummary::LOG, [$columns=Info, $ev=log_orig_traffic_summary]);
 
   local r1 = SumStats::Reducer($stream="orig.traffic.summary", $apply=set(SumStats::SUM));
   SumStats::create([$name="orig.traffic.summary",
-  $epoch=epoch,
+  $epoch=1hr,
   $reducers=set(r1),
   $epoch_result(ts: time, key: SumStats::Key, result: SumStats::Result) =
 {
@@ -96,7 +97,7 @@ for ( proto in bytes_per_proto )
     }
   
   # Log the breakdown
-  rec = [$start_time= strftime("%c", ts - epoch ), $traffic_summary=breakdown];
+  local rec = [$start_time= strftime("%c", ts - epoch ), $traffic_summary=breakdown];
   Log::write(OrigTrafficSummary::LOG, rec);
   bytes_per_proto = table();
   }

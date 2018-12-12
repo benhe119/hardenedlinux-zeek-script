@@ -1,8 +1,7 @@
+#Modified by hardenedlinux
+global my_count = 0;
 global local_subnets: set[subnet] = {
-
-
-172,16.0.0/20
-
+192.168.0.0/16
 
 };
 global inside_networks: set[addr];

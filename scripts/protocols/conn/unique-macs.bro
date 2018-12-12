@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#Modified by hardenedlinux
+@load packages/bro-sumstats-counttable
 module UniqueMacs;
 
 export {
@@ -37,33 +39,37 @@ global log_conn_count: event(rec: Info);
 
 event bro_init()
   {
-  local rec: UniqueMacs::Info;
+  
   Log::create_stream(UniqueMacs::LOG, [$columns=Info, $ev=log_conn_count]);
 
-  local r1 = SumStats::Reducer($stream="unique.macs", $apply=set(SumStats::UNIQUE));
+  local r1 = SumStats::Reducer($stream="unique.macs", $apply=set(SumStats::COUNTTABLE));
   SumStats::create([$name="unique.macs",
   $epoch=epoch,
   $reducers=set(r1),
   $epoch_result(ts: time, key: SumStats::Key, result: SumStats::Result) =
 {
 local r = result["unique.macs"];
-rec = [$start_time= strftime("%c", r$begin), $epoch=epoch, $net=key$str, $mac_cnt=r$unique];
-Log::write(UniqueMacs::LOG, rec);
+local counttable = r$counttable;
 
-}
+for ( i in counttable )
+  local rec = [$start_time= strftime("%c", r$begin), $epoch=epoch, $net=key$str, $mac_cnt=r$counttable[i]];
+  Log::write(UniqueMacs::LOG, rec);
+
+  }
 ]);
 }
 
 event DHCP::log_dhcp(rec: DHCP::Info) {
 
 
-  if ( rec$assigned_ip in watched_nets ) {
+  if ( rec$assigned_addr in watched_nets ) {
 
     local net: subnet;
-
+    
     for ( net in watched_nets ) { 
 
-      if ( rec$assigned_ip in net ) {
+      if ( rec$assigned_addr in net ) {
+        print rec$assigned_addr;
         SumStats::observe("unique.macs", [$str=fmt("%s",net)], [$str=rec$mac]);
         }
       

@@ -14,7 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Modified by hardenedlinux
 module UniqueHosts;
+@load packages/bro-sumstats-counttable
 
 export {
 
@@ -37,20 +39,24 @@ global log_conn_count: event(rec: Info);
 
 event bro_init()
   {
-  local rec: UniqueHosts::Info;
+  #local rec: UniqueHosts::Info;
   Log::create_stream(UniqueHosts::LOG, [$columns=Info, $ev=log_conn_count]);
 
-  local r1 = SumStats::Reducer($stream="unique.hosts", $apply=set(SumStats::UNIQUE));
+  local r1 = SumStats::Reducer($stream="unique.hosts", $apply=set(SumStats::COUNTTABLE));
   SumStats::create([$name="unique.hosts",
   $epoch=epoch,
   $reducers=set(r1),
   $epoch_result(ts: time, key: SumStats::Key, result: SumStats::Result) =
 {
 local r = result["unique.hosts"];
-rec = [$start_time= strftime("%c", r$begin), $epoch=epoch, $net=key$str, $ip_cnt=r$unique];
-Log::write(UniqueHosts::LOG, rec);
+local counttable = r$counttable;
 
-}
+for ( i in counttable )
+
+  local rec = [$start_time= strftime("%c", r$begin), $epoch=epoch, $net=key$str, $ip_cnt=r$counttable[i]];
+  Log::write(UniqueHosts::LOG, rec);
+
+  }
 ]);
 }
 

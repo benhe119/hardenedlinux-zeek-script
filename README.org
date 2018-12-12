@@ -1,0 +1,52 @@
+
+* Quickly start
+** Public Bro Repositories
+
+ #+begin_src sh :tangle yes
+   ##Bro-Manager
+   sudo pip install bro-pkg
+   ##Bro installation is owned by "root" user that was stored in /root/.bro-pkg
+   sudo bro-pkg autoconfig
+
+   sudo bro-pkg config script_dir
+   sudo bro-pkg config plugin_dir
+
+   sudo bro-pkg install https://github.com/hosom/bro-ja3 \
+        https://github.com/hosom/file-extraction \
+        https://github.com/GTrunSec/bro-osquery-test.git \
+        https://github.com/0xxon/bro-sumstats-counttable
+   #create a bundle file which contains a snapshot of all currently installed packages:
+   sudo bro-pkg bundle bro-packages.bundle
+
+   sudo bro-pkg unbundle bro-packages.bundle
+
+ #+end_src
+* Pre-for Bro-2.7
+** Protocol
+*** synthetical[2/2]
+    + [X] [] Bro-kafka
+    + [X] [] protocol-status 
+*** SSL [1/1]
+    + [X] [] ssl-cipher-count
+*** Conn
+    + [X] [] TrackDHCP
+    + [X] []  orig-traffic-summary.bro
+    + [X] [] large_transfer 
+    + [X] []  Unique-Macs
+    + [X] []  Unique-host
+    + [X] [] simple-ip-count
+    + [X] [] top-metrics.bro
+    + [X] [] resp-summary.bro
+*** DNS
+    + [ ] [] dns-bad_behavior.bro
+    + [ ] [] bad-dns
+    + [ ] [] split-dns
+    + [ ] [] known_domains.bro
+    + [ ] []  sum_dns_req.bro
+
+
+*** DHCP
+** Fraemwork
+*** DONE Osquery
+*** Dectec Application
+    + [X] []  Owasp

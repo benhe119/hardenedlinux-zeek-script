@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#Modified by hardenedlinux
 module RespTrafficSummary;
 
 export {
@@ -35,7 +36,7 @@ export {
   event bro_init()
 {
 
-local rec: RespTrafficSummary::Info;
+
 Log::create_stream(RespTrafficSummary::LOG, [$columns=Info, $ev=log_resp_traffic_summary]);
 
 local r1 = SumStats::Reducer($stream="resp.traffic.summary", $apply=set(SumStats::SUM));
@@ -63,7 +64,7 @@ for ( proto in bytes_per_proto )
     breakdown = fmt("%s %s: %s%s, ", breakdown, to_upper(proto), percentage,"%");
     }
   
-  rec = [$start_time= strftime("%c", ts - epoch ), $traffic_breakdown=breakdown];
+  local rec = [$start_time= strftime("%c", ts - epoch ), $traffic_breakdown=breakdown];
   Log::write(RespTrafficSummary::LOG, rec);
   bytes_per_proto = table();
   }
