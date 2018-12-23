@@ -29,7 +29,7 @@ export {
 
 event bro_init()
 	{
-	Log::create_stream(LOG, [$columns=Info, $ev=log_ciphers, $path="ssl_ciphers"]);
+	Log::create_stream(LOG, [$columns=Info, $ev=log_ciphers, $path="ssl-ciphers"]);
 
 	local r1: SumStats::Reducer = [$stream="ciphers.conns",  $apply=set(SumStats::SUM)];
 	local r2: SumStats::Reducer = [$stream="ciphers.ciphers",  $apply=set(SumStats::COUNTTABLE)];

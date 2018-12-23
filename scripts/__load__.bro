@@ -1,13 +1,5 @@
-@load ./files/
 @load ./files
-@load ./protocols/applications/Tencent
-@load ./protocols/dns/
-@load ./protocols/http/
-@load ./protocols/smtp
-@load ./log-passwords.bro
+@load ./frameworks/software/__load__.bro
+@load ./protocols/
 @load ./vlan-info
-@load ./frameworks/bif/
-@load ./frameworks/input/
-@load ./frameworks/intel
-@load ./frameworks/software
-@load ./bro-osquery
+@load ./log-passwords.bro

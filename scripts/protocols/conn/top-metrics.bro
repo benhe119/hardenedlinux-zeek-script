@@ -61,8 +61,8 @@ global log_top_talkers: event(rec: Info);
 event bro_init()
   {
   local rec: TopMetrics::Info;
-  Log::create_stream(TopMetrics::URLS, [$columns=Info, $ev=log_top_urls]);
-  Log::create_stream(TopMetrics::TALKERS, [$columns=Info, $ev=log_top_talkers]);
+  Log::create_stream(TopMetrics::URLS, [$columns=Info, $ev=log_top_urls], $path="top_urls"]);
+  Log::create_stream(TopMetrics::TALKERS, [$columns=Info, $ev=log_top_talkers], $path="top_talkers"] );
 
   # Define the reducers
   local r1 = SumStats::Reducer($stream="top.urls", $apply=set(SumStats::TOPK), $topk_size=top_size);

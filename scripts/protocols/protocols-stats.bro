@@ -63,7 +63,7 @@ module ProtocolStats;
 export {
   
   ## The duration of the epoch, which defines the time between two consecutive reports
-  global epoch: interval = 10sec &redef;
+  global epoch: interval = 5min &redef;
 
   ## The protocol analyzers will build composites based on traffic. For example, 
   ## SSL HTTP traffic will be denoted as SSL,HTTP (or HTTP,SSL). If composite_protocols
@@ -306,8 +306,8 @@ if ( direction == "orig" )
 
         event bro_init()
       {
-      Log::create_stream(ProtocolStats::ORIG, [$columns=Info, $ev=log_orig_proto_stats]);
-      Log::create_stream(ProtocolStats::RESP, [$columns=Info, $ev=log_resp_proto_stats]);
+      Log::create_stream(ProtocolStats::ORIG, [$columns=Info, $ev=log_orig_proto_stats, $path="protocol-orig"]);
+      Log::create_stream(ProtocolStats::RESP, [$columns=Info, $ev=log_resp_proto_stats, $path="protocol-resp"]);
 
       # Define reducers
       local r1 = SumStats::Reducer($stream="orig.proto.stats", $apply=set(SumStats::SUM));

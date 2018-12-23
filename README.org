@@ -32,19 +32,17 @@
     + [X] [] TrackDHCP
     + [X] []  orig-traffic-summary.bro
     + [X] [] large_transfer 
-    + [X] []  Unique-Macs
-    + [X] []  Unique-host
-    + [X] [] simple-ip-count
+    + [X] [subnet]  Unique-Macs
+    + [X] [subnet]  Unique-host
+    + [X] [subnet] simple-ip-count
     + [X] [] top-metrics.bro
     + [X] [] resp-summary.bro
 *** DNS
-    + [ ] [] dns-bad_behavior.bro
-    + [ ] [] bad-dns
-    + [ ] [] split-dns
-    + [ ] [] known_domains.bro
-    + [ ] []  sum_dns_req.bro
-
-
+    + [X] [] dns-bad_behavior.bro
+    + [X] [] bad-dns
+    + [X] [] split-dns
+    + [X] [] known_domains.bro
+    + [X] []  sum_dns_req.bro
 *** DHCP
 ** Fraemwork
 *** DONE Osquery

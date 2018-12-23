@@ -40,7 +40,7 @@ global log_conn_count: event(rec: Info);
 event bro_init()
   {
   
-  Log::create_stream(UniqueMacs::LOG, [$columns=Info, $ev=log_conn_count]);
+  Log::create_stream(UniqueMacs::LOG, [$columns=Info, $ev=log_conn_count, $path="unique-macs"]);
 
   local r1 = SumStats::Reducer($stream="unique.macs", $apply=set(SumStats::COUNTTABLE));
   SumStats::create([$name="unique.macs",

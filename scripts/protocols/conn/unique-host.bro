@@ -40,7 +40,7 @@ global log_conn_count: event(rec: Info);
 event bro_init()
   {
   #local rec: UniqueHosts::Info;
-  Log::create_stream(UniqueHosts::LOG, [$columns=Info, $ev=log_conn_count]);
+  Log::create_stream(UniqueHosts::LOG, [$columns=Info, $ev=log_conn_count, $path="unique-host"]);
 
   local r1 = SumStats::Reducer($stream="unique.hosts", $apply=set(SumStats::COUNTTABLE));
   SumStats::create([$name="unique.hosts",
