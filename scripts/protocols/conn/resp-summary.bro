@@ -37,7 +37,8 @@ export {
 {
 
 
-Log::create_stream(RespTrafficSummary::LOG, [$columns=Info, $ev=log_resp_traffic_summary]);
+Log::create_stream(RespTrafficSummary::LOG, [$columns=Info, $ev=log_resp_traffic_summary,$path="resp-summary"]);
+
 
 local r1 = SumStats::Reducer($stream="resp.traffic.summary", $apply=set(SumStats::SUM));
 SumStats::create([$name="resp.traffic.summary",

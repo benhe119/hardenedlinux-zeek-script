@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #Modified by hardenedlinux
-@load packages/bro-sumstats-counttable
+@load ../../frameworks/countabble.bro
 module UniqueMacs;
 
 export {

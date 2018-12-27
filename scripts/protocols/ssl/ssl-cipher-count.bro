@@ -4,7 +4,8 @@
 # Original Scirpt:https://github.com/0xxon/bro-sumstats-counttable
 # modified by GTrunsec
 @load base/protocols/ssl
-@load packages/bro-sumstats-counttable
+@load ../../frameworks/countabble.bro
+
 
 module SSLCiphers;
 
@@ -65,7 +66,7 @@ event bro_init()
 #	return;
 
 SumStats::observe("ciphers.conns", [$host=c$id$resp_h], []);
-##pre-for bro 2.7
+
 for ( i in ciphers )
 	local cipher_str = SSL::cipher_desc[ciphers[i]];
 	

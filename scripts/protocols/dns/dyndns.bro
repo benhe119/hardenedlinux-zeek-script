@@ -1,6 +1,6 @@
-module DynamicDNS;
 
 @load base/frameworks/input/
+module DynamicDNS;
 
 # This module is used to look for dynamic dns domains that are present in various kinds of
 # network traffic. For HTTP, the HOST header value is checked, for DNS the query request value

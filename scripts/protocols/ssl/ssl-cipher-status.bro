@@ -8,8 +8,8 @@
 # Michal Purzynski mpurzynski@mozilla.com
 # Modtified by hardenedlinux
 @load base/protocols/ssl
-@load packages/bro-sumstats-counttable
 
+@load ../../frameworks/countabble.bro
 module SSLCipherStat;
 
 export {

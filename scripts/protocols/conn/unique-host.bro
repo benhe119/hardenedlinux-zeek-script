@@ -16,7 +16,8 @@
 
 # Modified by hardenedlinux
 module UniqueHosts;
-@load packages/bro-sumstats-counttable
+@load ../../frameworks/countabble.bro
+
 
 export {
 

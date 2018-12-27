@@ -4,7 +4,11 @@
 
  #+begin_src sh :tangle yes
    ##Bro-Manager
-   sudo pip install bro-pkg
+    cd ~/src
+    git clone https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles.git
+    sh Debian-GNU-Linux-Profiles/NSM/sensor/bro/analyzer.sh
+
+    sudo pip install bro-pkg
    ##Bro installation is owned by "root" user that was stored in /root/.bro-pkg
    sudo bro-pkg autoconfig
 
@@ -12,9 +16,11 @@
    sudo bro-pkg config plugin_dir
 
    sudo bro-pkg install https://github.com/hosom/bro-ja3 \
+        https://github.com/sethhall/domain-tld \ 
         https://github.com/hosom/file-extraction \
         https://github.com/GTrunSec/bro-osquery-test.git \
-        https://github.com/0xxon/bro-sumstats-counttable
+        https://github.com/corelight/http-stalling-detector \
+        https://github.com/hardenedlinux/hardenedlinux-bro-script \
    #create a bundle file which contains a snapshot of all currently installed packages:
    sudo bro-pkg bundle bro-packages.bundle
 
