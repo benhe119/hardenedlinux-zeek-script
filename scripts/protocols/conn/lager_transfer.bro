@@ -1,4 +1,4 @@
-@Load base/protocols/conn/thresholds
+@load base/protocols/conn/thresholds
 
 export {
   const large_transfer = 100000 &redef;
