@@ -10,7 +10,7 @@
 
     sudo pip install bro-pkg
    ##Bro installation is owned by "root" user that was stored in /root/.bro-pkg
-   sudo bro-pkg autoconfig
+   bro-pkg autoconfig
 
    sudo bro-pkg config script_dir
    sudo bro-pkg config plugin_dir
@@ -18,7 +18,7 @@
    sudo bro-pkg install https://github.com/hosom/bro-ja3 \
         https://github.com/sethhall/domain-tld \ 
         https://github.com/hosom/file-extraction \
-        https://github.com/GTrunSec/bro-osquery-test.git \
+        https://github.com/GTrunSec/bro-osquery-test \
         https://github.com/corelight/http-stalling-detector \
         https://github.com/hardenedlinux/hardenedlinux-bro-script \
    #create a bundle file which contains a snapshot of all currently installed packages:
@@ -27,6 +27,13 @@
    sudo bro-pkg unbundle bro-packages.bundle
 
  #+end_src
+** Bro-osquery-kafka
+#+begin_src sh :tangle yes
+https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/Osquery/bro-osquery.sh
+
+# add this line to scripts/__load__.bro
+@load ./bro-osquery-kafka.bro
+#+end_src
 * Pre-for Bro-2.7
 ** Protocol
 *** synthetical[2/2]
