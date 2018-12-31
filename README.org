@@ -8,26 +8,32 @@
     git clone https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles.git
     sh Debian-GNU-Linux-Profiles/NSM/sensor/bro/analyzer.sh
 
-    sudo pip install bro-pkg
+    pip install bro-pkg
    ##Bro installation is owned by "root" user that was stored in /root/.bro-pkg
    bro-pkg autoconfig
 
-   sudo bro-pkg config script_dir
-   sudo bro-pkg config plugin_dir
+   bro-pkg config script_dir
+   bro-pkg config plugin_dir
 
-   sudo bro-pkg install https://github.com/hosom/bro-ja3 \
-        https://github.com/sethhall/domain-tld \ 
-        https://github.com/hosom/file-extraction \
-        https://github.com/GTrunSec/bro-osquery-test \
-        https://github.com/corelight/http-stalling-detector \
-        https://github.com/hardenedlinux/hardenedlinux-bro-script \
+
+bro-pkg install https://github.com/hosom/bro-ja3 \
+  https://github.com/corelight/http-stalling-detector \
+https://github.com/GTrunSec/bro-osquery-test \
+https://github.com/corelight/http-stalling-detector \
+ https://github.com/hosom/file-extraction
+
+bro-pkg https://github.com/hardenedlinux/hardenedlinux-bro-scrip
    #create a bundle file which contains a snapshot of all currently installed packages:
-   sudo bro-pkg bundle bro-packages.bundle
+   bro-pkg bundle bro-packages.bundle
 
-   sudo bro-pkg unbundle bro-packages.bundle
+   bro-pkg unbundle bro-packages.bundle
+
+echo '@load packages' | sudo tee --append /usr/local/bro/share/bro/site/local.bro
+
+sudo broctl deploy
 
  #+end_src
-** Bro-osquery-kafka
+** Bro-osquery-kafkax
 #+begin_src sh :tangle yes
 https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/Osquery/bro-osquery.sh
 
@@ -57,7 +63,12 @@ https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/Osque
     + [X] [] known_domains.bro
     + [X] []  sum_dns_req.bro
 *** DHCP
+*** SMB
+    + [X] [Ref] [[https://www.sans.org/reading-room/whitepapers/detection/detecting-malicious-smb-activity-bro-37472][Detecting Malicious SMB Activity Using Bro]]
 ** Fraemwork
+*** files
+**** DONE SSdeep & tlsh
+     - https://github.com/J-Gras/bro-fuzzy-hashing
 *** DONE Osquery
 *** Dectec Application
     + [X] []  Owasp
