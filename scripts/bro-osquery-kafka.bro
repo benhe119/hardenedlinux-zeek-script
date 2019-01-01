@@ -1,5 +1,8 @@
 @load /usr/local/bro/lib/bro/plugins/APACHE_KAFKA/scripts/Apache/Kafka
 @load packages/bro-osquery-test
+@load packages/bro-osquery-test/logging/tables/mounts.bro
+@load packages/bro-osquery-test/logging/tables/listening_ports.bro
+
 redef Kafka::topic_name = "";
 redef Kafka::tag_json = T;
 
@@ -126,7 +129,7 @@ $config = table(
 ),
 $path = "osq-mounts"
 ];
-Log::add_filter(osquery::LOG, filter_osq_mounts );
+Log::add_filter(osquery::mount::LOG, filter_osq_mounts );
 
 ## listening_ports
 local filter_listening_ports: Log::Filter = [
@@ -137,6 +140,6 @@ $name = "listening_ports",
 ),
 $path = "osq-listening_ports"
 ];
-Log::add_filter(osquery::LOG, filter_listening_ports);
+Log::add_filter(osquery::listening::LOG, filter_listening_ports);
 
 }
