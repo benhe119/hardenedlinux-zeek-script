@@ -1,13 +1,13 @@
 
 * Quickly start
+
+** Install Bro-analyzed
+ - [[https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/sensor/bro/analyzer.sh][Debian-GNU-Linux-Profiles/analyzer.sh at master · hardenedlinux/Debian-GNU-Linux-Profiles]]
+
 ** Public Bro Repositories
 
  #+begin_src sh :tangle yes
    ##Bro-Manager
-    cd ~/src
-    git clone https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles.git
-    sh Debian-GNU-Linux-Profiles/NSM/sensor/bro/analyzer.sh
-
     sudo pip install bro-pkg
    ##Bro installation is owned by "root" user that was stored in /root/.bro-pkg
   sudo  bro-pkg autoconfig
@@ -25,17 +25,20 @@ https://github.com/sethhall/domain-tld
 
 
 sudo bro-pkg https://github.com/hardenedlinux/hardenedlinux-bro-scrip
-   #create a bundle file which contains a snapshot of all currently installed packages:
+
+#create a bundle file which contains a snapshot of all currently installed packages:
 
  # sudo  bro-pkg bundle bro-packages.bundle
 
 #sudo bro-pkg unbundle bro-packages.bundle
 
-echo '@load packages' | sudo tee --append /usr/local/bro/share/bro/site/local.bro
-
 sudo broctl deploy
 
  #+end_src
+
+/Be carefully, if you have done analyzed.sh. Dont echo load packahes repeatedly./
+
+=echo '@load packages' | sudo tee --append /usr/local/bro/share/bro/site/local.bro=
 ** Bro-osquery-kafkax
 #+begin_src sh :tangle yes
 https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/Osquery/bro-osquery.sh
@@ -54,24 +57,72 @@ https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/Osque
     + [X] [] TrackDHCP
     + [X] []  orig-traffic-summary.bro
     + [X] [] large_transfer 
+      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/conn/lager_transfer.bro][hardenedlinux-bro-script/lager_transfer.bro at master · hardenedlinux/hardenedlinux-bro-script]]
+
+       #+begin_src sh :tangle yes             
+const large_transfer = 100000 &redef;
+       #+end_src
     + [X] [subnet]  Unique-Macs
+      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/conn/unique-macs.bro][hardenedlinux-bro-script/unique-macs.bro at master · hardenedlinux/hardenedlinux-bro-script]]
+         - epoch: interval = 1hr
+         - watched_nets: set[subnet] = [ 10.0.0.0/8, 192.168.0.0/16 ]
     + [X] [subnet]  Unique-host
+      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/conn/unique-host.bro][hardenedlinux-bro-script/unique-host.bro at master · hardenedlinux/hardenedlinux-bro-script]]
+        - epoch: interval = 1hr
+        - watched_nets: set[subnet] = [ 10.0.0.0/8, 192.168.0.0/16 ]
     + [X] [subnet] simple-ip-count
+      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/conn/simple_ip_count.bro][hardenedlinux-bro-script/simple_ip_count.bro at master · hardenedlinux/hardenedlinux-bro-script]]
+        - local_subnets: set[subnet] = { 192.168.0.0/16}
     + [X] [] top-metrics.bro
+      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/conn/top-metrics.bro][hardenedlinux-bro-script/top-metrics.bro at master · hardenedlinux/hardenedlinux-bro-script]]
+        - epoch_duration: interval = 10 sec 
+        - top_size: count = 20
+        - talker_bin_size = 10000
     + [X] [] resp-summary.bro
 *** DNS
     + [X] [] dns-bad_behavior.bro
+      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/dns/dns-bad_behavior.bro][hardenedlinux-bro-script/dns-bad_behavior.bro at master · hardenedlinux/hardenedlinux-bro-script]]
+        - ignore_DNS_names = /wpad|isatap|autodiscover|gstatic\.com$|domains\._msdcs|mcafee\.com$/ 
+        - dns_plsize_alert = 512 
+        - dns_ports_ignore: set[port] = {137/udp, 137/tcp}
+        - dns_query_oversize = 90
     + [X] [] bad-dns
+      - [Intel-list][[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/dns/dynamic_dns.txt][hardenedlinux-bro-script/dynamic_dns.txt at master · hardenedlinux/hardenedlinux-bro-script]]
+        - [Source] [[http://www.malware-domains.com/files/][Index of /files]] dynamic_dns.zip
     + [X] [] split-dns
     + [X] [] known_domains.bro
     + [X] []  sum_dns_req.bro
+    + [ ] [] Top-dns
+      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/dns/top_dns.bro][hardenedlinux-bro-script/top_dns.bro at master · hardenedlinux/hardenedlinux-bro-script]]
+        - logging_interval = 15mins
+        - top_k = 10 ##top missing names 
+
 *** DHCP
 *** SMB
     + [X] [Ref] [[https://www.sans.org/reading-room/whitepapers/detection/detecting-malicious-smb-activity-bro-37472][Detecting Malicious SMB Activity Using Bro]]
+*** SSH
+    + [X] [] ssh_auth_count_framwork
+      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/ssh/ssh_auth_count_framwork.bro][hardenedlinux-bro-script/ssh_auth_count_framwork.bro at master · hardenedlinux/hardenedlinux-bro-script]]
+      - epoch_interval = 10min  
 ** Fraemwork
+*** VLan-info
+    - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/tree/master/scripts/vlan-info][hardenedlinux-bro-script/scripts/vlan-info at master · hardenedlinux/hardenedlinux-bro-script]]
+      #+begin_src bro :tangle yes
+[100] = [$description="north",$ipv4net=10.2.0.0/24,$ipv6net=[2001:0468:1f07:000b::]/64,$location="north"],
+[101] = [$description="south",$ipv4net=10.12.0.0/24,$ipv6net=[2001:0468:1f07:000c::]/64,$location="south"],
+[102] = [$description="west",$ipv4net=10.16.0.0/24,$ipv6net=[2001:0468:1f07:000d::]/64,$location="west"],
+[103] = [$description="east",$ipv4net=10.10.0.0/24,$ipv6net=[2001:0468:1f07:f00e::]/64,$location="east"]
+      #+end_src
 *** files
 **** DONE SSdeep & tlsh
      - https://github.com/J-Gras/bro-fuzzy-hashing
 *** DONE Osquery
 *** Dectec Application
     + [X] []  Owasp
+*** filter
+    - Http
+      - ts","uid","uri","user_agent","id.orig_h
+    - DNS
+      - "ts","id.orig_h","query"
+    - Syslog
+      - ignored_syslog_servers: set[addr] = { 10.1.1.1 }
