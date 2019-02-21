@@ -39,6 +39,7 @@ local filter_files: Log::Filter = [
 $name = "filter_files",
 $writer = Log::WRITER_KAFKAWRITER,
 $config = table(
+
 ["metadata.broker.list"] = "localhost:9092"
 ),
 $path = "files_identified"
