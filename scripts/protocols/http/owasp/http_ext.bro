@@ -14,12 +14,13 @@ function extract_params_data(uri: string): set[string]
 	local p: set[string] = set();
 	if (strstr(uri, "?")==0) return p;
 
-	local query: string = split1(uri, /\?/)[2];
-	local opv: table[count] of string = split(query, /&/);
+	local query = split_string1(uri, /\?/)[1];
+	local opv = split_string1(query, /&/);
 
 	for (each in opv)
 	{
-		add p[split1(opv[each], /=/)[2]];
+		add p[split_string1(opv[each], /=/)[1]];
+
 	}
 	
 	return p;

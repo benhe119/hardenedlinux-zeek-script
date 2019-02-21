@@ -24,7 +24,7 @@ https://github.com/corelight/http-stalling-detector \
 https://github.com/sethhall/domain-tld
 
 
-sudo bro-pkg https://github.com/hardenedlinux/hardenedlinux-bro-scrip
+sudo bro-pkg install https://github.com/hardenedlinux/hardenedlinux-bro-script
 
 #create a bundle file which contains a snapshot of all currently installed packages:
 
@@ -103,7 +103,10 @@ const large_transfer = 100000 &redef;
 *** SSH
     + [X] [] ssh_auth_count_framwork
       - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/ssh/ssh_auth_count_framwork.bro][hardenedlinux-bro-script/ssh_auth_count_framwork.bro at master · hardenedlinux/hardenedlinux-bro-script]]
-      - epoch_interval = 10min  
+      - epoch_interval = 10min
+*** HTTP
+**** [[https://www.sans.org/reading-room/whitepapers/detection/web-application-attack-analysis-bro-ids-34042][Web Application Attack Analysis Using Bro IDS]]
+*** OWAMP
 ** Fraemwork
 *** VLan-info
     - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/tree/master/scripts/vlan-info][hardenedlinux-bro-script/scripts/vlan-info at master · hardenedlinux/hardenedlinux-bro-script]]
