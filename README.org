@@ -3,7 +3,8 @@
 
 ** Install Bro-analyzed
  - [[https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/sensor/bro/analyzer.sh][Debian-GNU-Linux-Profiles/analyzer.sh at master · hardenedlinux/Debian-GNU-Linux-Profiles]]
-
+ - Alternative plugin
+   - [[https://github.com/packetsled/bro_tcplog_plugin][packetsled/bro_tcplog_plugin: PacketSled's Bro Tcplog Plugin]]
 ** Public Bro Repositories
 
  #+begin_src sh :tangle yes
@@ -39,7 +40,7 @@ sudo broctl deploy
 /Be carefully, if you have done analyzed.sh. Dont echo load packahes repeatedly./
 
 =echo '@load packages' | sudo tee --append /usr/local/bro/share/bro/site/local.bro=
-** Bro-osquery-kafkax
+** Bro-osquery-kafka
 #+begin_src sh :tangle yes
 https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/Osquery/bro-osquery.sh
 
@@ -48,6 +49,7 @@ https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/Osque
 #+end_src
 * Pre-for Bro-2.7
 ** Protocol
+
 *** synthetical[2/2]
     + [X] [] Bro-kafka
     + [X] [] protocol-status 
@@ -108,6 +110,18 @@ const large_transfer = 100000 &redef;
 **** [[https://www.sans.org/reading-room/whitepapers/detection/web-application-attack-analysis-bro-ids-34042][Web Application Attack Analysis Using Bro IDS]]
 *** OWAMP
 ** Fraemwork
+*** Intel
+**** How to write a intel source file
+      Keep in mind that all field separation is with literal tabs! Double check that you don’t have spaces as separators.
+      - [[https://github.com/GTrunSec/bro_intel_linter/tree/develop][GTrunSec/bro_intel_linter at develop]] easy to help you check Intel
+
+~python intel_linter.py -f tests/intel.bro~
+
+- edit Intel
+      C-q <tab>
+
+      C-q insert the next character as a raw character
+      Or I would like to use ~Xah-quote-inster~ then press ~#~ & ~<tab>~~ as separator.
 *** VLan-info
     - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/tree/master/scripts/vlan-info][hardenedlinux-bro-script/scripts/vlan-info at master · hardenedlinux/hardenedlinux-bro-script]]
       #+begin_src bro :tangle yes
@@ -119,6 +133,25 @@ const large_transfer = 100000 &redef;
 *** files
 **** DONE SSdeep & tlsh
      - https://github.com/J-Gras/bro-fuzzy-hashing
+**** OSINT
+    List:      |     Description:
+        snort      -     http://labs.snort.org/feeds/ip-filter.blf (IP)
+        et_ips     -     http://rules.emergingthreats.net/open/suricata/rules/compromised-ips.txt (IP)
+        alienvault -     http://reputation.alienvault.com/reputation.generic (BIG file) (IP)
+        botcc      -     http://rules.emergingthreats.net/open/suricata/rules/botcc.rules (IP)
+        tor        -     http://rules.emergingthreats.net/open/suricata/rules/tor.rules (IP)
+        rbn        -     http://rules.emergingthreats.net/blockrules/emerging-rbn.rules (IP)
+        malhosts   -     http://www.malwaredomainlist.com/hostslist/hosts.txt (DNS)
+        malips     -     http://www.malwaredomainlist.com/hostslist/ip.txt (IP)
+        ciarmy     -     http://www.ciarmy.com/list/ci-badguys.txt (IP)
+        mayhemic   -     http://secure.mayhemiclabs.com/malhosts/malhosts.txt (DNS)
+        mandiant   -     https://raw.github.com/jonschipp/mal-dnssearch/master/mandiant_apt1.dns (DNS)
+Download and install mal-dnssearch:
+
+$ git clone https://github.com/jonschipp/mal-dnssearch
+$ cd mal-dnssearch
+$ sudo make install
+
 *** DONE Osquery
 *** Dectec Application
     + [X] []  Owasp
