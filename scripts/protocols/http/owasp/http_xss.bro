@@ -3,8 +3,7 @@ export {
  redef enum Notice::Type += {
  ## Generated if a Command injection takes place using URL
  URI_Injection,
- Basic_Auth_Server
-
+     Basic_Auth_Server
 };
 }
 event http_header(c: connection, is_orig: bool, name: string, value: string)
