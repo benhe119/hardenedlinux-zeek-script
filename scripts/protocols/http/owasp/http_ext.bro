@@ -19,7 +19,7 @@ function extract_params_data(uri: string): set[string]
 
 	for (each in opv)
 	{
-		add p[split_string1(opv[each], /=/)[1]];
+		add p[split_string1(opv[each], /=/)[0]];
 
 	}
 	
