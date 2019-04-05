@@ -68,11 +68,12 @@ event DHCP::log_dhcp(rec: DHCP::Info) {
     
     for ( net in watched_nets ) { 
 
-      if ( rec$assigned_addr in net ) {
-        print rec$assigned_addr;
+  if ( rec?$assigned_addr && (rec$assigned_addr in watched_nets )) {
+
+      {
         SumStats::observe("unique.macs", [$str=fmt("%s",net)], [$str=rec$mac]);
-        }
-      
+      }
+
       }
     }
 

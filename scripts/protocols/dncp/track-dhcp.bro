@@ -15,8 +15,11 @@ redef record Conn::Info += {
   };
 }
 
-event DHCP::log_dhcp (rec: DHCP::Info) { 
-  ip_to_mac[rec$assigned_addr] = rec$mac;
+event DHCP::log_dhcp (rec: DHCP::Info) {
+    if ( rec?$assigned_addr){
+
+        ip_to_mac[rec$assigned_addr] = rec$mac;
+        }
   }
 
 event connection_state_remove (c: connection) { 
