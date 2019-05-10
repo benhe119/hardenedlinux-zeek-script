@@ -1,0 +1,64 @@
+
+type MQTT::HEADER: record {
+    hdrlen              : count &log &optional; 
+    QoS                 : count &log &optional; 
+    dup                 : count &log &optional; 
+    retain              : count &log &optional; 
+};
+
+type MQTT::CONNECT: record {
+    hdr                 : MQTT::HEADER  &log &optional;
+    protocol_name       : string        &log &optional;
+    protocol_version    : count         &log &optional;
+    connect_flags       : count         &log &optional;
+    keep_alive          : count         &log &optional;
+    client_id           : string        &log &optional;
+    clean_session       : count         &log &optional;
+    willtopic           : string        &log &optional;
+    willmsg             : string        &log &optional;
+    willusername        : string        &log &optional;
+    willpassword        : string        &log &optional;
+};
+
+type MQTT::CONNACK: record {
+    hdr                 : MQTT::HEADER  &log &optional;
+    reserved            : count         &log &optional;
+    return_code         : count         &log &optional;
+};
+
+type MQTT::PUBLISH: record {
+    hdr                 : MQTT::HEADER  &log &optional;
+    topic               : string        &log &optional;
+    msg_id              : count         &log &optional;
+    message             : string        &log &optional;
+};
+
+type MQTT::PUBACK: record {
+    hdr                 : MQTT::HEADER  &log &optional;
+    msg_id              : count         &log &optional;
+};
+
+type MQTT::SUBSCRIBE: record {
+    hdr                 : MQTT::HEADER   &log &optional;
+    msg_id              : count          &log &optional;
+    topic               : string         &log &optional;  
+    requested_qos       : count          &log &optional;
+};
+
+type MQTT::SUBACK: record {
+    hdr                 : MQTT::HEADER               &log &optional;
+    msg_id              : count                      &log &optional;
+    granted_qos         : count                      &log &optional;  
+};
+
+type MQTT::UNSUBSCRIBE: record {
+    hdr                 : MQTT::HEADER               &log &optional;
+    msg_id              : count                      &log &optional;
+    topic               : string                     &log &optional;
+};
+
+type MQTT::UNSUBACK: record {
+    hdr                 : MQTT::HEADER               &log &optional;
+    msg_id              : count                      &log &optional;
+};
+
