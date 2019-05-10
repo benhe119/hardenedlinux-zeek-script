@@ -17,9 +17,10 @@ export {
 };
 
 global multi_notice_types: set[Notice::Type] = {
-#  		SSH::Password_Guessing,
+        SSH::Password_Guessing,
 #  		Bash::HTTP_Header_Attack
-SSL::Invalid_Server_Cert
+        SSL::Invalid_Server_Cert,
+        CVE_2017_12240::LARGE_DHCP_PACKET
 } &redef;
 
 global multi_non_block_thres: count = 3 &redef;
