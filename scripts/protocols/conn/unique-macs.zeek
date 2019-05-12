@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #Modified by hardenedlinux
-@load ../../frameworks/countabble.bro
+@load ../../frameworks/countabble.zeek
 module UniqueMacs;
 
 export {

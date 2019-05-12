@@ -9,7 +9,7 @@
 # Modtified by hardenedlinux
 @load base/protocols/ssl
 
-@load ../../frameworks/countabble.bro
+@load ../../frameworks/countabble.zeek
 module SSLCipherStat;
 
 export {

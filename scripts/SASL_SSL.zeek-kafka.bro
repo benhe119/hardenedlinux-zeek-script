@@ -124,9 +124,9 @@ $path = "ssl"
 Log::add_filter(SSL::LOG, filter_ssl );
 ##ssh-status
 local filter_ssh: Log::Filter = [
-$name = "ssh-status",
+$name = "ssh-connect",
 $writer = Log::WRITER_KAFKAWRITER,
-$path = "status.ssh"
+$path = "auth_ssh"
 ];
 Log::add_filter(HSSH::LOG, filter_ssh );
 ##Hash-fuzzing

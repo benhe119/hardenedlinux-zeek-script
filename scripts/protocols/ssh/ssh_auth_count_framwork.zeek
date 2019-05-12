@@ -1,4 +1,4 @@
-@load ../../frameworks/countabble.bro
+@load ../../frameworks/countabble.zeek
 
 
 module HSSH;

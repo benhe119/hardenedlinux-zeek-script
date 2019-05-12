@@ -4,7 +4,7 @@
 # Original Scirpt:https://github.com/0xxon/bro-sumstats-counttable
 # modified by GTrunsec
 @load base/protocols/ssl
-@load ../../frameworks/countabble.bro
+@load ../../frameworks/countabble.zeek
 
 
 module SSLCiphers;

@@ -16,7 +16,7 @@
 
 # Modified by hardenedlinux
 module UniqueHosts;
-@load ../../frameworks/countabble.bro
+@load ../../frameworks/countabble.zeek
 
 
 export {
