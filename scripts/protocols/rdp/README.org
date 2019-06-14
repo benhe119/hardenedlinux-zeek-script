@@ -1,0 +1,24 @@
+#+TITLE: README
+
+* Reference
+
+** [[http://docs.zeek.org/en/latest/script-reference/proto-analyzers.html#bro-rdp][Protocol Analyzers — Zeek User Manual git/master]]
+
+
+
+* Microsft Routing and Remote Access (Osquery & Zeek/RDP)
+
+ - RRAS events
+ - process_open_sockets-osquey where the local port is 3389. Some systems may use VNC on porn 5800/5900, or X11 service on port 600x etc.
+
+   #+begin_src bro :tangle yes
+
+const ports = { 3389/tcp };
+
+   #+end_src
+ -
+
+* Account Lockout use cases
+** Account Logon Failures Status for event ID 4625
+
+* Monitoring Jump Boxes
