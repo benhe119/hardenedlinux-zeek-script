@@ -32,6 +32,9 @@ const ports = { 3389/tcp };
      - c$rdp$client_channels :: MS_T120
    - RDP::ClientCoreData
 
+
+# Windows Server 2000 defined 32 Static Virtual Channels (SVCs) with RDP 5.1,
+    - c$rdp$client_build == "RDP 5.1"
    - GCC
 
 

@@ -24,7 +24,7 @@ export {
 
 event rdp_client_network_data (c: connection, channels: RDP::ClientChannelList)
 {
-    if (c$rdp$client_channels[1] == "MS_T120")
+    if (c$rdp$client_channels[1] == "MS_T120" && c$rdp$client_build == "RDP 5.1")
     {
        NOTICE([$note=Val_RDP_Channel_Name,
                 	$msg=fmt("CVE-2019-0708 - %s", c$rdp$client_channels),
