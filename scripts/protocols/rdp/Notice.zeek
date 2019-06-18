@@ -11,25 +11,29 @@ export {
 
 		Val_RDP_Channel_Name,
 
-            Val_RDP_Head_Version,
+        Val_RDP_Head_Version,
 
 
-		        Val_RDP_Neg,
+		Val_RDP_Neg,
 
-                    Val_RDP_Build,
+         Val_RDP_Build,
     };
 }
 
 
 
 event rdp_client_network_data (c: connection, channels: RDP::ClientChannelList)
+
 {
-    if (c$rdp$client_channels[1] == "MS_T120" && c$rdp$client_build == "RDP 5.1")
-    {
-       NOTICE([$note=Val_RDP_Channel_Name,
-                	$msg=fmt("CVE-2019-0708 - %s", c$rdp$client_channels),
+    for ( i in c$rdp$client_channels)
+        local channel_count;
+        ++channel_count;
+        if (c$rdp$client_channels[1] == "MS_T120" && channel_count < 6)
+            {
+                NOTICE([$note=Val_RDP_Channel_Name,
+                	$msg=fmt("CVE-2019-0708 - %s - %s", c$rdp$client_channels, c$rdp$client_build),
                 	$conn=c]);
-        }
+            }
 }
 
 
