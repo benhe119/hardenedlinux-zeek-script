@@ -1,6 +1,6 @@
 
 ##! logging.
-
+## FIXME: Update tomorrow, will fix sync host to domain
 @load base/utils/directions-and-hosts
 @load base/frameworks/cluster
 
@@ -45,7 +45,7 @@ export {
 	## :zeek:see:`Known::domain_store`.
 	option domain_store_timeout = 15sec;
 
-	## The set of all known certificates to store for preventing duplicate 
+	## The set of all known domains to store for preventing duplicate 
 	## logging. It can also be used from other scripts to 
 	## inspect if a certificate has been seen in use. The string value 
 	## in the set is for storing the DER formatted certificate' SHA1 domain.
@@ -153,16 +153,32 @@ event zeek_init()
 
 
 
-event dns_query_reply(c: connection, msg: dns_msg, query: string, qtype: count, qclass: count)
+# event dns_query_reply(c: connection, msg: dns_msg, query: string, qtype: count, qclass: count)
+# {
+# 	if(!c$dns?$query)
+# 	    return;
+
+# 	local host = c$id$orig_h;
+
+#     for (domain in set(query))
+# 		if (  addr_matches_host(host, domain_tracking) )
+# 			local info = DomainsInfo($ts = network_time(), $host = host, $domain = c$dns$query);
+# 			event Known::domain_found(info);
+
+# }
+
+event DNS::log_dns(rec: DNS::Info)
 {
-	if(!c$dns?$query)
-	    return;
-
-	    local host = c$id$orig_h;
-
-    	 for (domain in set(query))
-		    if (  addr_matches_host(host, domain_tracking) )
-				local info = DomainsInfo($ts = network_time(), $host = host, $domain = c$dns$query);
-				event Known::domain_found(info);
-
+	local host = rec$id$orig_h;
+	if (! rec?$query)
+        return;
+	
+    local query = rec$query;
+	print query;
+	for (domain in set(query)){
+		if (  addr_matches_host(host, domain_tracking) )
+			local info = DomainsInfo($ts = network_time(), $host = host, $domain = rec$query);
+			event Known::domain_found(info);
+	}		
+   
 }
