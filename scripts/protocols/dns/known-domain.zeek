@@ -1,6 +1,6 @@
 
 ##! logging.
-
+##! TODO//Cluster::MANAGER
 @load base/frameworks/cluster
 @load ../../frameworks/domain-tld/scripts
 @load ./alexa/alexa_validation.zeek
@@ -8,18 +8,19 @@
 module Known;
 
 export {
-   	redef enum Log::ID += { DOMAIN_LOG };
+	redef enum Log::ID += { DOMAIN_LOG };
 	
 	type DomainsInfo: record {
 
-		ts:             time   &log;
+		ts:           	 	time   		&log;
 
-		host:           addr   &log;
+		host:           	addr   		&log;
 
-	    domain: string &log &optional;
+		domain: 			string 		&log 	&optional;
 
-	     found_in_alexa :bool &log;
-	     found_dynamic :bool &log;
+		found_in_alexa:		bool 		&log;
+
+		found_dynamic:		bool 		&log;
 	};
 	
 
@@ -73,7 +74,7 @@ event Known::domain_found(info: DomainsInfo)
 	
 
 	when ( local r = Broker::put_unique(Known::domain_store$store, info$domain,
-	                                    T, Known::domain_store_expiry) )
+	T, Known::domain_store_expiry) )
 		{
 		if ( r$status == Broker::SUCCESS )
 			{
@@ -82,7 +83,7 @@ event Known::domain_found(info: DomainsInfo)
 			}
 		else
 			Reporter::error(fmt("%s: data store put_unique failure",
-			                    Known::domain_store_name));
+			Known::domain_store_name));
 		}
 	timeout Known::domain_store_timeout
 		{
@@ -102,8 +103,8 @@ event known_domain_add(info: DomainsInfo)
 	add Known::domains[info$domain];
 
 	@if ( ! Cluster::is_enabled() ||
-	      Cluster::local_node_type() == Cluster::PROXY )
-		Log::write(Known::DOMAIN_LOG, info);
+	Cluster::local_node_type() == Cluster::PROXY )
+	Log::write(Known::DOMAIN_LOG, info);
 	@endif
 	}
 
@@ -169,29 +170,27 @@ event DNS::log_dns(rec: DNS::Info)
 {
 	if (! rec?$query)
         return;
-	    local host = rec$id$orig_h;
-	    for ( domain in set(rec$query) ){
-		local split_domain = DomainTLD::effective_domain(domain);
-		local not_ignore = T;
-		for (dns in Alexa::ignore_dns)
-		    {
-		    if(split_domain == dns)
-			not_ignore = F;
-			}
-		local dynamic = T;	
-		if (split_domain !in DynamicDNS::dyndns_domains)
-		    dynamic = F;
-		    
-		if ( !(split_domain in Alexa::alexa_table) && not_ignore)
-			     {
-			     local info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = F, $found_dynamic = dynamic);
-			     event Known::domain_found(info);
-				     }
-			 else
-			     {
-			     info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = T, $found_dynamic = dynamic);
-			     event Known::domain_found(info);
-			     }
+	local host = rec$id$orig_h;
+	for ( domain in set(rec$query) ){
+	local split_domain = DomainTLD::effective_domain(domain);
+	local not_ignore = T;
+	for (dns in Alexa::ignore_dns)
+		{
+		if(split_domain == dns)
+		not_ignore = F;
+		}
+	local dynamic = T;	
+	if (split_domain !in DynamicDNS::dyndns_domains)
+		dynamic = F;    
+	if ( !(split_domain in Alexa::alexa_table) && not_ignore)
+		{
+			local info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = F, $found_dynamic = dynamic);
+			event Known::domain_found(info);
+		}
+		else
+		{
+			info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = T, $found_dynamic = dynamic);
+			event Known::domain_found(info);
+		}
 	}		
-   
 }
