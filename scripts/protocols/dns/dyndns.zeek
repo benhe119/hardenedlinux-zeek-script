@@ -1,5 +1,6 @@
 
 @load base/frameworks/input/
+@load ../../frameworks/domain-tld/scripts
 module DynamicDNS;
 
 # This module is used to look for dynamic dns domains that are present in various kinds of
@@ -35,7 +36,7 @@ export {
     redef enum Notice::Type += { DynDNS::HTTP, DynDNS::DNS, DynDNS::Traffic, DynDNS::SSL };
     const ignore_dyndns_fqdns: set[string] = { } &redef;
     const dyndns_filename = "dynamic_dns.txt" &redef;
-    #const dyndns_filename = "/Users/gtrun/project/SA-tools/sensor/zeek/script/hardenedlinux-bro-script/scripts/protocols/dns/dynamic_dns.txt" &redef;
+    #const dyndns_filename = "/Users/gtrun/project/SA-tools/sensor/zeek/script/hardenedlinux-zeek-script/scripts/protocols/dns/dynamic_dns.txt" &redef;
 
     global dyndns_domains: set[string] = set();
 
@@ -50,21 +51,6 @@ type Idx: record {
 global dyndns_resolved_ips: table[addr] of string = table() &create_expire=1days;
 global dyndnslist_ready: bool = F;
 
-function get_domain_2level(domain: string): string
-    {
-    local result = find_last(domain, /\.[^\.]+\.[^\.]+$/);
-    if ( result == "" )
-        return domain;
-    return sub_bytes(result, 2, |result|); #updated for bro 2.2
-    }
-
-function get_domain_3level(domain: string): string
-    {
-    local result = find_last(domain, /\.[^\.]+\.[^\.]+\.[^\.]+$/);
-    if ( result == "" )
-        return domain;
-    return sub_bytes(result, 2, |result|); #updated for bro 2.2
-    }
 
 event zeek_init()
     {
@@ -91,20 +77,13 @@ event http_header(c: connection, is_orig: bool, name: string, value: string)
         {
         if ( value in ignore_dyndns_fqdns )
             return;
-        local domain = get_domain_2level(value);
+        local domain = DomainTLD::effective_domain(value);
         if ( domain in dyndns_domains )
             {
             NOTICE([$note=DynDNS::HTTP, $msg="Found Dynamic DNS Hostname",
                     $sub=value, $conn=c, $suppress_for=30mins, 
                     $identifier=cat(c$id$resp_h,c$id$resp_p,c$id$orig_h,value)]);
             return;
-            }
-        domain = get_domain_3level(value);
-        if ( domain in dyndns_domains )
-            {
-            NOTICE([$note=DynDNS::HTTP, $msg="Found Dynamic DNS Hostname", 
-                    $sub=value, $conn=c, $suppress_for=30mins, 
-                    $identifier=cat(c$id$resp_h,c$id$resp_p,c$id$orig_h,value)]);
             }
         }
     }
@@ -121,7 +100,7 @@ hook DNS::do_reply(c: connection, msg: dns_msg, ans: dns_answer, reply: string)
         value = c$dns$query;
         if ( value in ignore_dyndns_fqdns )
             return;
-        local domain = get_domain_2level(value);
+        local domain = DomainTLD::effective_domain(value);
         if ( domain in dyndns_domains )
             {
             NOTICE([$note=DynDNS::DNS, $msg="Found Dynamic DNS Hostname", 
@@ -129,14 +108,7 @@ hook DNS::do_reply(c: connection, msg: dns_msg, ans: dns_answer, reply: string)
                     $identifier=cat(c$id$resp_h,c$id$resp_p,c$id$orig_h,value)]);
             dyn = T;
             }
-        domain = get_domain_3level(value);
-        if ( domain in dyndns_domains )
-            {
-            NOTICE([$note=DynDNS::DNS, $msg="Found Dynamic DNS Hostname", 
-                    $sub=value, $conn=c, $suppress_for=30mins, 
-                    $identifier=cat(c$id$resp_h,c$id$resp_p,c$id$orig_h,value)]);
-            dyn = T;
-            }
+
         }
     if ( dyn )
         {
@@ -164,12 +136,8 @@ event ssl_established(c: connection)
         local value = c$ssl$server_name;
         if ( value in ignore_dyndns_fqdns )
             return;
-        local domain = get_domain_2level(value);
-        if ( domain in dyndns_domains )
-            NOTICE([$note=DynDNS::SSL, $msg="Found Dynamic DNS Hostname", 
-                    $sub=value, $conn=c, $suppress_for=30mins,
-                    $identifier=cat(c$id$resp_h,c$id$resp_p,c$id$orig_h,value)]);
-        domain = get_domain_3level(value);
+        local domain = DomainTLD::effective_domain(value);
+
         if ( domain in dyndns_domains )
             NOTICE([$note=DynDNS::SSL, $msg="Found Dynamic DNS Hostname", 
                     $sub=value, $conn=c, $suppress_for=30mins,
