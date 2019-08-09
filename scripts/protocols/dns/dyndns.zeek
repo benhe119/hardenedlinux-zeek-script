@@ -35,13 +35,18 @@ export {
     redef enum Notice::Type += { DynDNS::HTTP, DynDNS::DNS, DynDNS::Traffic, DynDNS::SSL };
     const ignore_dyndns_fqdns: set[string] = { } &redef;
     const dyndns_filename = "dynamic_dns.txt" &redef;
+    #const dyndns_filename = "/Users/gtrun/project/SA-tools/sensor/zeek/script/hardenedlinux-bro-script/scripts/protocols/dns/dynamic_dns.txt" &redef;
+
+    global dyndns_domains: set[string] = set();
+
     }
 
 type Idx: record {
     domain: string;
+    
 };
 
-global dyndns_domains: set[string] = set();
+#global dyndns_domains: set[string] = set();
 global dyndns_resolved_ips: table[addr] of string = table() &create_expire=1days;
 global dyndnslist_ready: bool = F;
 
@@ -61,7 +66,7 @@ function get_domain_3level(domain: string): string
     return sub_bytes(result, 2, |result|); #updated for bro 2.2
     }
 
-event bro_init()
+event zeek_init()
     {
     Input::add_table([$source=dyndns_filename, $mode=Input::REREAD,
         $name="dynlist", $idx=Idx, $destination=dyndns_domains]);

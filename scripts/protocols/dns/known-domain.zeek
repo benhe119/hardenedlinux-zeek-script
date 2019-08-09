@@ -1,9 +1,10 @@
 
 ##! logging.
 
-@load base/utils/directions-and-hosts
 @load base/frameworks/cluster
 @load ../../frameworks/domain-tld/scripts
+@load ./alexa/alexa_validation.zeek
+@load ./dyndns.zeek
 module Known;
 
 export {
@@ -17,8 +18,8 @@ export {
 
 	    domain: string &log &optional;
 
-	    # not_in_alexa :bool &log;
-	    # found_dynamic :bool &log;
+	     found_in_alexa :bool &log;
+	     found_dynamic :bool &log;
 	};
 	
 
@@ -171,8 +172,26 @@ event DNS::log_dns(rec: DNS::Info)
 	    local host = rec$id$orig_h;
 	    for ( domain in set(rec$query) ){
 		local split_domain = DomainTLD::effective_domain(domain);
-		local info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain);
-		event Known::domain_found(info);
+		local not_ignore = T;
+		for (dns in Alexa::ignore_dns)
+		    {
+		    if(split_domain == dns)
+			not_ignore = F;
+			}
+		local dynamic = T;	
+		if (split_domain !in DynamicDNS::dyndns_domains)
+		    dynamic = F;
+		    
+		if ( !(split_domain in Alexa::alexa_table) && not_ignore)
+			     {
+			     local info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = F, $found_dynamic = dynamic);
+			     event Known::domain_found(info);
+				     }
+			 else
+			     {
+			     info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = T, $found_dynamic = dynamic);
+			     event Known::domain_found(info);
+			     }
 	}		
    
 }

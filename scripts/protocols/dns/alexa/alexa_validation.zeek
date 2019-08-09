@@ -17,7 +17,7 @@ export {
 # hosts to ignore
  # global DNS::log_dns: event (rec: DNS::Info);
   const ignore_dns: set[string] = { "WORKGROUP", "DOMEX"} &redef;
-
+global alexa_table: set[string] = set();
 }
 
 # Record for domains in file above
@@ -26,7 +26,6 @@ type Idx: record {
 };
 
 # Table to store list of domains in file above
-global alexa_table: set[string] = set();
 global missed_alexa_dns_count: double;
 
 event zeek_init()
@@ -44,7 +43,9 @@ SumStats::create([$name = "missed_alexa_dns",
 
 	                # Provide a callback for when a key crosses the threshold.
 	                $epoch_result(ts: time, key: SumStats::Key, result: SumStats::Result) =
-	                {
+	            {
+		    	                  #	print fmt("%.0f",result["missed_alexa_dns"]$sum);
+
                   if ("missed_alexa_dns" !in result)
                     return;
                     missed_alexa_dns_count = result["missed_alexa_dns"]$sum;
@@ -79,10 +80,10 @@ if ( !(get_domain in alexa_table)  && !(rec$query in alexa_table) && not_ignore)
 
   
   # Generate the notice
-  # Includes the connection flow, host intiating the lookup, domain queried, and query answers (if available)
+    # Includes the connection flow, host intiating the lookup, domain queried, and query answers (if available)
+    ##! $msg=fmt("%s unknown domain. missed_count %0.f", rec$id$orig_h,missed_alexa_dns_count),
+    	##! FIXME : Need to fix bug that value used but not set
     NOTICE([$note=Alexa::DNS_Not_In_Alexa_1M,
-	#;; FIXME : Need to fix bug that value used but not set
-    ## $msg=fmt("%s unknown domain. missed_count %0.f", rec$id$orig_h,missed_alexa_dns_count),
           $msg=fmt("%s unknown domain.", rec$id$orig_h),
           $sub=sub_msg,
           $id=rec$id,
