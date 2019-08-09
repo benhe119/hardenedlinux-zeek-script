@@ -1,6 +1,8 @@
 
 ##! logging.
-## FIXME: Update tomorrow, will fix sync host to domain
+##! FIXME: Update tomorrow, will fix sync host to domain
+
+
 @load base/utils/directions-and-hosts
 @load base/frameworks/cluster
 
@@ -21,9 +23,6 @@ export {
 	    # found_dynamic :bool &log;
 	};
 	
-	## The certificates whose existence should be logged and tracked.
-	## Choices are: LOCAL_HOSTS, REMOTE_HOSTS, ALL_HOSTS, NO_HOSTS.
-	option domain_tracking = ALL_HOSTS;
 
 	## Toggles between different implementations of this script.
 	## When true, use a Broker data store, else use a regular Zeek set
@@ -52,7 +51,7 @@ export {
 	##
 	## In cluster operation, this set is uniformly distributed across
 	## proxy nodes.
-	global domains: set[addr] &create_expire=1day &redef;
+	global domains: set[string] &create_expire=1day &redef;
 	
 	## Event that can be handled to access the loggable record as it is sent
 	## on to the logging framework.
@@ -74,7 +73,7 @@ event Known::domain_found(info: DomainsInfo)
 
 	
 
-	when ( local r = Broker::put_unique(Known::domain_store$store, info$host,
+	when ( local r = Broker::put_unique(Known::domain_store$store, info$domain,
 	                                    T, Known::domain_store_expiry) )
 		{
 		if ( r$status == Broker::SUCCESS )
@@ -98,10 +97,10 @@ event known_domain_add(info: DomainsInfo)
 	if ( Known::use_domain_store )
 		return;
 
-	if ( [info$host] in Known::domains )
+	if ( [info$domain] in Known::domains )
 		return;
 
-	add Known::domains[info$host];
+	add Known::domains[info$domain];
 
 	@if ( ! Cluster::is_enabled() ||
 	      Cluster::local_node_type() == Cluster::PROXY )
@@ -114,10 +113,10 @@ event Known::domain_found(info: DomainsInfo)
 	if ( Known::use_domain_store )
 		return;
 
-	if ( [info$host] in Known::domains )
+	if ( [info$domain] in Known::domains )
 		return;
 
-	Cluster::publish_hrw(Cluster::proxy_pool, info$host, known_domain_add, info);
+	Cluster::publish_hrw(Cluster::proxy_pool, info$domain, known_domain_add, info);
 	event known_domain_add(info);
 	}
 
@@ -169,16 +168,12 @@ event zeek_init()
 
 event DNS::log_dns(rec: DNS::Info)
 {
-	local host = rec$id$orig_h;
 	if (! rec?$query)
         return;
 	
-    local query = rec$query;
-	print query;
-	for (domain in set(query)){
-		if (  addr_matches_host(host, domain_tracking) )
-			local info = DomainsInfo($ts = network_time(), $host = host, $domain = rec$query);
-			event Known::domain_found(info);
+	    for ( domain in set(rec$query) ){
+		local info = DomainsInfo($ts = network_time(), $host = host, $domain = rec$query);
+		event Known::domain_found(info);
 	}		
    
 }
