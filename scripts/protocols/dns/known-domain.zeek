@@ -1,11 +1,9 @@
 
 ##! logging.
-##! FIXME: Update tomorrow, will fix sync host to domain
-
 
 @load base/utils/directions-and-hosts
 @load base/frameworks/cluster
-
+@load ../../frameworks/domain-tld/scripts
 module Known;
 
 export {
@@ -170,9 +168,10 @@ event DNS::log_dns(rec: DNS::Info)
 {
 	if (! rec?$query)
         return;
-	
+	    local host = rec$id$orig_h;
 	    for ( domain in set(rec$query) ){
-		local info = DomainsInfo($ts = network_time(), $host = host, $domain = rec$query);
+		local split_domain = DomainTLD::effective_domain(domain);
+		local info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain);
 		event Known::domain_found(info);
 	}		
    
