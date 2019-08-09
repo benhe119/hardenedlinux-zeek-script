@@ -11,11 +11,13 @@ export {
    };
 
   # path to alexa 1m file
-  const alexa_file = "/Users/gtrun/project/SA-tools/sensor/zeek/script/hardenedlinux-bro-script/scripts/protocols/dns/alexa/top-1m.txt" &redef;
-  #const alexa_file = "./top-1m.txt" &redef;
+  #const alexa_file = "/Users/gtrun/project/SA-tools/sensor/zeek/script/hardenedlinux-bro-script/scripts/protocols/dns/alexa/top-1m.txt" &redef;
+  const alexa_file = "./top-1m.txt" &redef;
 
-  # hosts to ignore
+# hosts to ignore
+ # global DNS::log_dns: event (rec: DNS::Info);
   const ignore_dns: set[string] = { "WORKGROUP", "DOMEX"} &redef;
+
 }
 
 # Record for domains in file above
@@ -79,9 +81,9 @@ if ( !(get_domain in alexa_table)  && !(rec$query in alexa_table) && not_ignore)
   # Generate the notice
   # Includes the connection flow, host intiating the lookup, domain queried, and query answers (if available)
     NOTICE([$note=Alexa::DNS_Not_In_Alexa_1M,
-	;; FIXME : Need to fix bug that value used but not set
+	#;; FIXME : Need to fix bug that value used but not set
     ## $msg=fmt("%s unknown domain. missed_count %0.f", rec$id$orig_h,missed_alexa_dns_count),
-          $msg=fmt("%s unknown domain. missed_count %0.f", rec$id$orig_h),
+          $msg=fmt("%s unknown domain.", rec$id$orig_h),
           $sub=sub_msg,
           $id=rec$id,
           $uid=rec$uid,
