@@ -11,7 +11,7 @@ export {
    };
 
   # path to alexa 1m file
-  #const alexa_file = "/Users/gtrun/project/SA-tools/sensor/zeek/script/hardenedlinux-bro-script/scripts/protocols/dns/alexa/top-1m.txt" &redef;
+  #const alexa_file = "/Users/gtrun/project/SA-tools/sensor/zeek/script/hardenedlinux-zeek-script/scripts/protocols/dns/alexa/top-1m.txt" &redef;
   const alexa_file = "./top-1m.txt" &redef;
 
 # hosts to ignore

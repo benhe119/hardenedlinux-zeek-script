@@ -2,8 +2,7 @@
 #set_separator	,
 #empty_field	(empty)
 #unset_field	-
-#path	known_domain
-#open	2019-08-09-01-43-16
+#path	known_domain#open	2019-08-09-01-43-16
 #fields	ts	host	domain	found_in_alexa	found_dynamic
 #types	time	addr	string	bool	bool
 1258531693.816224	192.168.1.103	DOMEX	T	F
