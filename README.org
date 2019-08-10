@@ -13,11 +13,13 @@
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 * CHANGES
-** Known/host/domain
-- [X] Scripts/protocols/dns/Known-domains :Cluster::worker <2019-08-10 Sat 02:36>
+** Known/hosts/domains
+- [X] file:scripts/protocols/dns/known-domains.zeek :Cluster::worker <2019-08-10 Sat 02:36>
 Test_log: [[file:scripts/protocols/dns/log/known_domain.log]]
-- [X] Scripts/protocols/dns/manager-domains  :Cluster::manager
-- [X] Scripts/protocols/conn/known-hosts [[https://github.com/dopheide-esnet/zeek-known-hosts-with-dns][dopheide-esnet/zeek-known-hosts-with-dns]]
-  #+begin_src zeek :tangle yes
-@unload protocols/conn/known-hosts
-  #+end_src
+- [X] file:scripts/protocols/dns/manager-domains.zeek   :Cluster::manager
+- [X] file:scripts/protocols/conn/known-hosts-with-dns.zeek : [[https://github.com/dopheide-esnet/zeek-known-hosts-with-dns][dopheide-esnet/zeek-known-hosts-with-dns]]
+  - ~@unload protocols/conn/known-hosts~
+  - setting/local_net_field.zeek  [Host_tracking = LOCAL_HOSTS/ALL_HOSTS]
+- 
+
+
