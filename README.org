@@ -1,164 +1,21 @@
-
-* Quickly start
-
-** Install Bro-analyzed
- - [[https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/sensor/bro/analyzer.sh][Debian-GNU-Linux-Profiles/analyzer.sh at master · hardenedlinux/Debian-GNU-Linux-Profiles]]
- - Alternative plugin
-   - [[https://github.com/packetsled/bro_tcplog_plugin][packetsled/bro_tcplog_plugin: PacketSled's Bro Tcplog Plugin]]
-** Public Bro Repositories
-
- #+begin_src sh :tangle yes
-   ##Bro-Manager
-    sudo pip install bro-pkg
-   ##Bro installation is owned by "root" user that was stored in /root/.bro-pkg
-  sudo  bro-pkg autoconfig
-
-  sudo bro-pkg config script_dir
-sudo bro-pkg config plugin_dir
-
-
-sudo bro-pkg install https://github.com/hosom/bro-ja3 \
-  https://github.com/corelight/http-stalling-detector \
-https://github.com/GTrunSec/bro-osquery-test \
-https://github.com/corelight/http-stalling-detector \
- https://github.com/hosom/file-extraction \
-https://github.com/sethhall/domain-tld
-
-
-sudo bro-pkg install https://github.com/hardenedlinux/hardenedlinux-bro-script
-
-#create a bundle file which contains a snapshot of all currently installed packages:
-
- # sudo  bro-pkg bundle bro-packages.bundle
-
-#sudo bro-pkg unbundle bro-packages.bundle
-
-sudo broctl deploy
-
- #+end_src
-
-/Be carefully, if you have done analyzed.sh. Dont echo load packahes repeatedly./
-
-=echo '@load packages' | sudo tee --append /usr/local/bro/share/bro/site/local.bro=
-** Bro-osquery-kafka
-#+begin_src sh :tangle yes
-https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/Osquery/bro-osquery.sh
-
-# add this line to scripts/__load__.bro
-@load ./bro-osquery-kafka.bro
-#+end_src
-* Pre-for Bro-2.7
-** Protocol
-
-*** synthetical[2/2]
-    + [X] [] Bro-kafka
-    + [X] [] protocol-status 
-*** SSL [1/1]
-    + [X] [] ssl-cipher-count
-*** Conn
-    + [X] [] TrackDHCP
-    + [X] []  orig-traffic-summary.bro
-    + [X] [] large_transfer 
-      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/conn/lager_transfer.bro][hardenedlinux-bro-script/lager_transfer.bro at master · hardenedlinux/hardenedlinux-bro-script]]
-
-       #+begin_src sh :tangle yes             
-const large_transfer = 100000 &redef;
-       #+end_src
-    + [X] [subnet]  Unique-Macs
-      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/conn/unique-macs.bro][hardenedlinux-bro-script/unique-macs.bro at master · hardenedlinux/hardenedlinux-bro-script]]
-         - epoch: interval = 1hr
-         - watched_nets: set[subnet] = [ 10.0.0.0/8, 192.168.0.0/16 ]
-    + [X] [subnet]  Unique-host
-      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/conn/unique-host.bro][hardenedlinux-bro-script/unique-host.bro at master · hardenedlinux/hardenedlinux-bro-script]]
-        - epoch: interval = 1hr
-        - watched_nets: set[subnet] = [ 10.0.0.0/8, 192.168.0.0/16 ]
-    + [X] [subnet] simple-ip-count
-      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/conn/simple_ip_count.bro][hardenedlinux-bro-script/simple_ip_count.bro at master · hardenedlinux/hardenedlinux-bro-script]]
-        - local_subnets: set[subnet] = { 192.168.0.0/16}
-    + [X] [] top-metrics.bro
-      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/conn/top-metrics.bro][hardenedlinux-bro-script/top-metrics.bro at master · hardenedlinux/hardenedlinux-bro-script]]
-        - epoch_duration: interval = 10 sec 
-        - top_size: count = 20
-        - talker_bin_size = 10000
-    + [X] [] resp-summary.bro
-*** DNS
-    + [X] [] dns-bad_behavior.bro
-      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/dns/dns-bad_behavior.bro][hardenedlinux-bro-script/dns-bad_behavior.bro at master · hardenedlinux/hardenedlinux-bro-script]]
-        - ignore_DNS_names = /wpad|isatap|autodiscover|gstatic\.com$|domains\._msdcs|mcafee\.com$/ 
-        - dns_plsize_alert = 512 
-        - dns_ports_ignore: set[port] = {137/udp, 137/tcp}
-        - dns_query_oversize = 90
-    + [X] [] bad-dns
-      - [Intel-list][[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/dns/dynamic_dns.txt][hardenedlinux-bro-script/dynamic_dns.txt at master · hardenedlinux/hardenedlinux-bro-script]]
-        - [Source] [[http://www.malware-domains.com/files/][Index of /files]] dynamic_dns.zip
-    + [X] [] split-dns
-    + [X] [] known_domains.bro
-    + [X] []  sum_dns_req.bro
-    + [ ] [] Top-dns
-      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/dns/top_dns.bro][hardenedlinux-bro-script/top_dns.bro at master · hardenedlinux/hardenedlinux-bro-script]]
-        - logging_interval = 15mins
-        - top_k = 10 ##top missing names 
-
-*** DHCP
-*** SMB
-    + [X] [Ref] [[https://www.sans.org/reading-room/whitepapers/detection/detecting-malicious-smb-activity-bro-37472][Detecting Malicious SMB Activity Using Bro]]
-*** SSH
-    + [X] [] ssh_auth_count_framwork
-      - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/blob/master/scripts/protocols/ssh/ssh_auth_count_framwork.bro][hardenedlinux-bro-script/ssh_auth_count_framwork.bro at master · hardenedlinux/hardenedlinux-bro-script]]
-      - epoch_interval = 10min
-*** HTTP
-**** [[https://www.sans.org/reading-room/whitepapers/detection/web-application-attack-analysis-bro-ids-34042][Web Application Attack Analysis Using Bro IDS]]
-*** OWAMP
-** Fraemwork
-*** Intel
-**** How to write a intel source file
-      Keep in mind that all field separation is with literal tabs! Double check that you don’t have spaces as separators.
-      - [[https://github.com/GTrunSec/bro_intel_linter/tree/develop][GTrunSec/bro_intel_linter at develop]] easy to help you check Intel
-
-~python intel_linter.py -f tests/intel.bro~
-
-- edit Intel
-      C-q <tab>
-
-      C-q insert the next character as a raw character
-      Or I would like to use ~Xah-quote-inster~ then press ~#~ & ~<tab>~~ as separator.
-*** VLan-info
-    - [[https://github.com/hardenedlinux/hardenedlinux-bro-script/tree/master/scripts/vlan-info][hardenedlinux-bro-script/scripts/vlan-info at master · hardenedlinux/hardenedlinux-bro-script]]
-      #+begin_src bro :tangle yes
-[100] = [$description="north",$ipv4net=10.2.0.0/24,$ipv6net=[2001:0468:1f07:000b::]/64,$location="north"],
-[101] = [$description="south",$ipv4net=10.12.0.0/24,$ipv6net=[2001:0468:1f07:000c::]/64,$location="south"],
-[102] = [$description="west",$ipv4net=10.16.0.0/24,$ipv6net=[2001:0468:1f07:000d::]/64,$location="west"],
-[103] = [$description="east",$ipv4net=10.10.0.0/24,$ipv6net=[2001:0468:1f07:f00e::]/64,$location="east"]
-      #+end_src
-*** files
-**** DONE SSdeep & tlsh
-     - https://github.com/J-Gras/bro-fuzzy-hashing
-**** OSINT
-    List:      |     Description:
-        snort      -     http://labs.snort.org/feeds/ip-filter.blf (IP)
-        et_ips     -     http://rules.emergingthreats.net/open/suricata/rules/compromised-ips.txt (IP)
-        alienvault -     http://reputation.alienvault.com/reputation.generic (BIG file) (IP)
-        botcc      -     http://rules.emergingthreats.net/open/suricata/rules/botcc.rules (IP)
-        tor        -     http://rules.emergingthreats.net/open/suricata/rules/tor.rules (IP)
-        rbn        -     http://rules.emergingthreats.net/blockrules/emerging-rbn.rules (IP)
-        malhosts   -     http://www.malwaredomainlist.com/hostslist/hosts.txt (DNS)
-        malips     -     http://www.malwaredomainlist.com/hostslist/ip.txt (IP)
-        ciarmy     -     http://www.ciarmy.com/list/ci-badguys.txt (IP)
-        mayhemic   -     http://secure.mayhemiclabs.com/malhosts/malhosts.txt (DNS)
-        mandiant   -     https://raw.github.com/jonschipp/mal-dnssearch/master/mandiant_apt1.dns (DNS)
-Download and install mal-dnssearch:
-
-$ git clone https://github.com/jonschipp/mal-dnssearch
-$ cd mal-dnssearch
-$ sudo make install
-
-*** DONE Osquery
-*** Dectec Application
-    + [X] []  Owasp
-*** filter
-    - Http
-      - ts","uid","uri","user_agent","id.orig_h
-    - DNS
-      - "ts","id.orig_h","query"
-    - Syslog
-      - ignored_syslog_servers: set[addr] = { 10.1.1.1 }
+#+TITLE: README
+#+AUTHOR: GTrunSec
+#+EMAIL: gtrunsec@hardenedlinux.org
+#+DATE: 10 August 2019
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en cn
+#+SETUPFILE: ~/org-notes/setup/darkcss.local
+#+hugo_publishdate: (0 5)
+#+hugo_auto_set_lastmod: t
+#+HUGO_categories: 
+#+HUGO_tags: 
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+* CHANGES
+* ✔ DONE Scripts/protocols/dns/Known-domains :Cluster::worker
+CLOSED: [2019-08-10 Sat 02:21]
+Test_log:file:scripts/protocols/dns/log/
+** ✔ DONE Scripts/protocols/dns/manager-domain  :Cluster::manager
+CLOSED: [2019-08-10 Sat 02:21]
