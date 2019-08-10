@@ -13,8 +13,11 @@
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 * CHANGES
-* ✔ DONE Scripts/protocols/dns/Known-domains :Cluster::worker
-CLOSED: [2019-08-10 Sat 02:21]
+** Known/host/domain
+- [X] Scripts/protocols/dns/Known-domains :Cluster::worker <2019-08-10 Sat 02:36>
 Test_log: [[file:scripts/protocols/dns/log/known_domain.log]]
-** ✔ DONE Scripts/protocols/dns/manager-domain  :Cluster::manager
-CLOSED: [2019-08-10 Sat 02:21]
+- [X] Scripts/protocols/dns/manager-domains  :Cluster::manager
+- [X] Scripts/protocols/conn/known-hosts [[https://github.com/dopheide-esnet/zeek-known-hosts-with-dns][dopheide-esnet/zeek-known-hosts-with-dns]]
+  #+begin_src zeek :tangle yes
+@unload protocols/conn/known-hosts
+  #+end_src

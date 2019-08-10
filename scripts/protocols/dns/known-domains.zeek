@@ -144,7 +144,7 @@ event Cluster::node_down(name: string, id: string)
 
 event zeek_init()
 	{
-	Log::create_stream(Known::DOMAIN_LOG, [$columns=DomainsInfo, $ev=log_known_domains, $path="known_domain"]);
+	Log::create_stream(Known::DOMAIN_LOG, [$columns=DomainsInfo, $ev=log_known_domains, $path="known_domains"]);
 	}
 
 
