@@ -1,4 +1,3 @@
-#+TITLE: README
 #+AUTHOR: GTrunSec
 #+EMAIL: gtrunsec@hardenedlinux.org
 #+DATE: 10 August 2019
@@ -16,6 +15,6 @@
 * CHANGES
 * ✔ DONE Scripts/protocols/dns/Known-domains :Cluster::worker
 CLOSED: [2019-08-10 Sat 02:21]
-Test_log:file:scripts/protocols/dns/log/
+Test_log: [[file:scripts/protocols/dns/log/known_domain.log]]
 ** ✔ DONE Scripts/protocols/dns/manager-domain  :Cluster::manager
 CLOSED: [2019-08-10 Sat 02:21]
