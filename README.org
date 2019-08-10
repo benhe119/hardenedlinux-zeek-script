@@ -14,12 +14,15 @@
 #+EXCLUDE_TAGS: noexport
 * CHANGES
 ** Known/hosts/domains
-- [X] file:scripts/protocols/dns/known-domains.zeek :Cluster::worker <2019-08-10 Sat 02:36>
-Test_log: [[file:scripts/protocols/dns/log/known_domain.log]]
-- [X] file:scripts/protocols/dns/manager-domains.zeek   :Cluster::manager
-- [X] file:scripts/protocols/conn/known-hosts-with-dns.zeek : [[https://github.com/dopheide-esnet/zeek-known-hosts-with-dns][dopheide-esnet/zeek-known-hosts-with-dns]]
+- [X] [[file:scripts/protocols/dns/log/known_domain.log]] :Cluster::worker <2019-08-10 Sat 02:36>
+  - Test_log: [[file:scripts/protocols/dns/log/known_domain.log]]
+- [X] [[file:scripts/protocols/dns/manager-domains.zeek]]  :Cluster::manager
+- [X]  [[file:scripts/protocols/conn/known-hosts-with-dns.zeek]]
+  - [[https://github.com/dopheide-esnet/zeek-known-hosts-with-dns/tree/master/scripts][zeek-known-hosts-with-dns/scripts at master · dopheide-esnet/zeek-known-hosts-with-dns]]
   - ~@unload protocols/conn/known-hosts~
   - setting/local_net_field.zeek  [Host_tracking = LOCAL_HOSTS/ALL_HOSTS]
-- 
-
+-
+** VXLAN
+- [ ] [TODO] [[file:scripts/vlan-info/vlan-data.zeek][VLAN_INFO]] 
+  - Add area and adapted to known-hosts[LOCAL_HOSTS]
 

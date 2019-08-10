@@ -19,6 +19,9 @@ export {
 
         ## Location information for the VLAN if applicable eg Building East, First Floor etc
         location: string &log &optional;
+
+	## give a tag of Buiding name or direction
+	area: string &log &optional;
     };
 
     global vlanlist: table[int] of vlandata = table() &redef;
@@ -26,9 +29,10 @@ export {
 }
 
 # This must be customized to each environment
+
 redef vlanlist += {
-[100] = [$description="north",$ipv4net=10.2.0.0/24,$ipv6net=[2001:0468:1f07:000b::]/64,$location="north"],
-[101] = [$description="south",$ipv4net=10.12.0.0/24,$ipv6net=[2001:0468:1f07:000c::]/64,$location="south"],
-[102] = [$description="west",$ipv4net=10.16.0.0/24,$ipv6net=[2001:0468:1f07:000d::]/64,$location="west"],
-[103] = [$description="east",$ipv4net=10.10.0.0/24,$ipv6net=[2001:0468:1f07:f00e::]/64,$location="east"]
-};
+[100] = [$description="north",$ipv4net=10.2.0.0/24,$ipv6net=[2001:0468:1f07:000b::]/64,$location="north",field = "#1 jiaoxue"],
+[101] = [$description="south",$ipv4net=10.12.0.0/24,$ipv6net=[2001:0468:1f07:000c::]/64,$location="south",field = "#2 jiaoxue"],
+[102] = [$description="west",$ipv4net=10.16.0.0/24,$ipv6net=[2001:0468:1f07:000d::]/64,$location="west",field = "#3 jiaoxue"],
+[103] = [$description="east",$ipv4net=10.10.0.0/24,$ipv6net=[2001:0468:1f07:f00e::]/64,$location="east",field = "#4 jiaoxue"]
+}
