@@ -159,19 +159,6 @@ event zeek_init()
 
 
 
-# event dns_query_reply(c: connection, msg: dns_msg, query: string, qtype: count, qclass: count)
-# {
-# 	if(!c$dns?$query)
-# 	    return;
-
-# 	local host = c$id$orig_h;
-
-#     for (domain in set(query))
-# 		if (  addr_matches_host(host, domain_tracking) )
-# 			local info = DomainsInfo($ts = network_time(), $host = host, $domain = c$dns$query);
-# 			event Known::domain_found(info);
-
-# }
 
 event DNS::log_dns(rec: DNS::Info)
 {
@@ -194,7 +181,7 @@ event DNS::log_dns(rec: DNS::Info)
 				local info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = F, $found_dynamic = dynamic);
 				event Known::domain_found(info);
 				@if ( Cluster::is_enabled() && Cluster::local_node_type() == Cluster::WORKER )
-					Broker::publish(Cluster::manager_topic,Known::host_found,[$ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = F, $found_dynamic = dynamic]);				
+					Broker::publish(Cluster::manager_topic,Known::domian_found,[$ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = F, $found_dynamic = dynamic]);				
 				@endif
 			}
 			else
@@ -202,7 +189,7 @@ event DNS::log_dns(rec: DNS::Info)
 				info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = T, $found_dynamic = dynamic);
 				event Known::domain_found(info);
 				@if ( Cluster::is_enabled() && Cluster::local_node_type() == Cluster::WORKER )
-					Broker::publish(Cluster::manager_topic,Known::host_found,[$ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = T, $found_dynamic = dynamic]);				
+					Broker::publish(Cluster::manager_topic,Known::domain_found,[$ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = T, $found_dynamic = dynamic]);				
 				@endif
 			}
 		}
