@@ -14,6 +14,6 @@ event Broker::peer_added(endpoint: Broker::EndpointInfo, msg: string) {
 	local i = 0;
 	while (i < 10) {
 
-		## creating this event will auto publish it (see the bro_init event)
+		## creating this event will auto publish it (see the zeek_init event)
 		event greet("hi there", ++i);
 	}

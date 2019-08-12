@@ -58,7 +58,7 @@ global log_top_talkers: event(rec: Info);
 
 }
 
-event bro_init()
+event zeek_init()
   {
   local rec: TopMetrics::Info;
   Log::create_stream(TopMetrics::URLS, [$columns=Info, $ev=log_top_urls, $path="top_urls"]);

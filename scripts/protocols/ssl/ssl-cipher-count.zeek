@@ -28,7 +28,7 @@ export {
 	global log_ciphers: event(rec: Info);
   }
 
-event bro_init()
+event zeek_init()
 	{
 	Log::create_stream(LOG, [$columns=Info, $ev=log_ciphers, $path="ssl-ciphers"]);
 

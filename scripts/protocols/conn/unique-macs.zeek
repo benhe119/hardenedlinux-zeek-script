@@ -37,7 +37,7 @@ global log_conn_count: event(rec: Info);
 
 }
 
-event bro_init()
+event zeek_init()
   {
   
   Log::create_stream(UniqueMacs::LOG, [$columns=Info, $ev=log_conn_count, $path="unique-macs"]);

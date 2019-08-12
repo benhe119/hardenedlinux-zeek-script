@@ -304,7 +304,7 @@ if ( direction == "orig" )
           }
 
 
-        event bro_init()
+        event zeek_init()
       {
       Log::create_stream(ProtocolStats::ORIG, [$columns=Info, $ev=log_orig_proto_stats, $path="protocol-orig"]);
       Log::create_stream(ProtocolStats::RESP, [$columns=Info, $ev=log_resp_proto_stats, $path="protocol-resp"]);

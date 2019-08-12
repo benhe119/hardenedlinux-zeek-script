@@ -33,7 +33,7 @@ export {
     
     }
 
-  event bro_init()
+  event zeek_init()
 {
 
 

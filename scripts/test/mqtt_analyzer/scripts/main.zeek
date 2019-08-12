@@ -33,7 +33,7 @@ const ports = { 1883/tcp };
 
 redef likely_server_ports += { ports };
 
-event bro_init() &priority=5
+event zeek_init() &priority=5
 {
     Log::create_stream(MQTT::LOG, [$columns=Info, $ev=log_mqtt, $path="mqtt"]);
     Analyzer::register_for_ports(Analyzer::ANALYZER_MQTT, ports);

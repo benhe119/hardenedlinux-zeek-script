@@ -54,7 +54,7 @@ event log_seen_vlans(){
     schedule vlan_report_interval { log_seen_vlans()};
 }
 
-event bro_init() &priority=5{
+event zeek_init() &priority=5{
     Log::create_stream(LOG, [$columns=Info]);
     schedule vlan_report_interval { log_seen_vlans()};
 }

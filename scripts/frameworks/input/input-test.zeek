@@ -21,7 +21,7 @@ global blacklist: table[addr] of Val = table();
 #
 
 
-event bro_init(){
+event zeek_init(){
   Input::add_table([$source=blacklist_filename, $name="blacklist",
 $idx=Idx, $val=Val, $destination=blacklist]);
 #$mode=Input::REREAD, $ev=entry]);

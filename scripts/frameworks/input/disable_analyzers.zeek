@@ -44,7 +44,7 @@ event disable_analyzer_ev(description: Input::EventDescription, t: Input::Event,
     }
   Analyzer::disable_analyzer(config_tag_map[data$protocol]); 
 }
-event bro_init() {
+event zeek_init() {
   Input::add_event([$source=disablelist_filename, 
 $name="disable_anaylyzer",
   $mode=Input::REREAD,

@@ -5,7 +5,7 @@ if( ! rec?$referrer )
   return F;
   }
 
-event bro_init() &priority=-10
+event zeek_init() &priority=-10
 {
 local filt = Log::get_filter(HTTP::LOG,"default");
 filt$include = set("ts","uid","uri","user_agent","id.orig_h");

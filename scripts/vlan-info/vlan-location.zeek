@@ -58,7 +58,7 @@ export {
     };
 }
 
-event bro_init(){
+event zeek_init(){
     # once vlanlist is built we need to build the subnet lookup table
     # for when we don't have the full conn info in Notices
     for (vlan in vlanlist) {

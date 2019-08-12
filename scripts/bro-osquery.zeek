@@ -12,7 +12,7 @@ redef Kafka::kafka_conf = table(
 );
 
 
-event bro_init() &priority=-10
+event zeek_init() &priority=-10
   {
 
 ## update [[https://github.com/zeek/zeek-osquery/commit/d84f7f49267a61f5904f39a1deafcea6b9bef6e0][{Scenario} Detect SSH Hopping · zeek/zeek-osquery@d84f7f4]]

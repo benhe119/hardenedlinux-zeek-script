@@ -1,7 +1,7 @@
 #source frome https://github.com/corelight/top-dns/blob/master/scripts/main.bro
 @load base/utils/site
 @load base/frameworks/sumstats
-@load packages/domain-tld
+@load ../../frameworks/domain-tld/scripts
 module TopDNS;
 
 export {
@@ -47,7 +47,7 @@ type Info: record {
 	};
 }
 
-event bro_init() &priority=5
+event zeek_init() &priority=5
 	{
 	Log::create_stream(TopDNS::LOG, [$columns=Info, $path="top_dns"]);
 

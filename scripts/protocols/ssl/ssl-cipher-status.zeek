@@ -56,7 +56,7 @@ redef record SSL::Info += {
   weak_cipher:    bool   &log &optional;
   };
 
-event bro_init()
+event zeek_init()
   {
 	Log::create_stream(SSLCipherStat::LOG1, [$columns=Info_C]);
 	Log::create_stream(SSLCipherStat::LOG2, [$columns=Info_S]);

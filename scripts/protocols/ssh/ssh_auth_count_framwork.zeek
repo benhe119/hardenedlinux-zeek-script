@@ -16,7 +16,7 @@ export {
   global log_mqtt: event(rec: Info);
 
   }
-event bro_init()
+event zeek_init()
 	{
 	Log::create_stream(HSSH::LOG, [$columns=Info, $ev=log_mqtt, $path="auth_ssh"]);
 

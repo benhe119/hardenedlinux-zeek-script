@@ -16,7 +16,7 @@ function filter_pred (rec: Syslog::Info) : bool
   return rec$id$resp_h ! in ignored_syslog_servers;
   }
 
-event bro_init()
+event zeek_init()
   {
   Log::remove_default_filter(Syslog::LOG);
   local filter: Log::Filter = [$name="syslog-filter", $path="syslog", $pred=filter_pred];

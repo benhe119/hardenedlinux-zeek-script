@@ -184,15 +184,12 @@ event DNS::log_dns(rec: DNS::Info)
 		{
 		local split_domain = DomainTLD::effective_domain(domain);
 		local not_ignore = T;
-		for (dns in Alexa::ignore_dns)
-			{
-			if(split_domain == dns)
-			not_ignore = F;
-			}
+		if (split_domain in Alexa::ignore_dns)
+			return;
 		local dynamic = T;
 		if (split_domain !in DynamicDNS::dyndns_domains)
 				dynamic = F;    
-		if ( !(split_domain in Alexa::alexa_table) && not_ignore)
+		if ( !(split_domain in Alexa::alexa_table))
 			{
 				local info = DomainsInfo($ts = network_time(), $host = host, $domain = split_domain, $found_in_alexa = F, $found_dynamic = dynamic);
 				event Known::domain_found(info);

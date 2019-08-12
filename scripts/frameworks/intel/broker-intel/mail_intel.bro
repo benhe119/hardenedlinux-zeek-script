@@ -13,7 +13,7 @@ event Broker::peer_added(endpoint: Broker::EndpointInfo, msg: string) {
 	local i = output;
 	while (list_num == 0) {
 
-		## creating this event will auto publish it (see the bro_init event)
+		## creating this event will auto publish it (see the zeek_init event)
 		event email_vast("Log output %s", email_data);
 	}
 

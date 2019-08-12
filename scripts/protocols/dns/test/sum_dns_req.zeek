@@ -7,7 +7,7 @@ event dns_request(c: connection, msg: dns_msg, query: string, qtype: count, qcla
     }
 
 
-event bro_init (){
+event zeek_init (){
 
   local r1 = SumStats::Reducer($stream="dns.lookup", $apply=set(SumStats::UNIQUE));
   SumStats::create([$name="dns,requests.unique",

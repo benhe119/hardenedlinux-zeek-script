@@ -56,7 +56,7 @@ export {
 #       }
  
  
-event bro_init()
+event zeek_init()
     {
     local r1 = SumStats::Reducer($stream="Detect.dnsTunneling", $apply=set(SumStats::SUM));
     SumStats::create([$name="Detect.dnsTunneling",

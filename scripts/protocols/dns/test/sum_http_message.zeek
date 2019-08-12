@@ -1,6 +1,6 @@
 @load base/frameworks/sumstats
 
-event bro_init() &priority=5
+event zeek_init() &priority=5
   {
   local r1=SumStats::Reducer($stream="http.queries",$apply=set(SumStats::SUM));
   SumStats::create([$name="http.excess.queries",

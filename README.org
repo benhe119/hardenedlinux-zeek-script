@@ -13,10 +13,23 @@
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 * CHANGES
+- TEST Environment
+#+begin_src shell :tangle yes
+zeek -v
+zeek version 3.0.0-rc1
+
+zeekctl status
+Name         Type    Host             Status    Pid    Started
+manager      manager 10.220.170.123   running   9214   12 Aug 02:49:28
+proxy-1      proxy   10.220.170.123   running   9264   12 Aug 02:49:29
+worker-1     worker  10.220.170.121   running   1784   12 Aug 02:49:31
+#+end_src
 ** Known/hosts/domains
-- [X] [[file:scripts/protocols/dns/log/known_domain.log]] :Cluster::worker <2019-08-10 Sat 02:36>
+- [X] [[file:scripts/protocols/dns/known-domains.zeek]] :Cluster::worker <2019-08-10 Sat 02:36>
   - Test_log: [[file:scripts/protocols/dns/log/known_domain.log]]
 - [X] [[file:scripts/protocols/dns/manager-domains.zeek]]  :Cluster::manager
+    - [[file:scripts/protocols/dns/log/manager_known_domain.log]]
+   - add TEST ignore_dns list 
 - [X]  [[file:scripts/protocols/conn/known-hosts-with-dns.zeek]]
   - [[https://github.com/dopheide-esnet/zeek-known-hosts-with-dns/tree/master/scripts][zeek-known-hosts-with-dns/scripts at master · dopheide-esnet/zeek-known-hosts-with-dns]]
   - ~@unload protocols/conn/known-hosts~

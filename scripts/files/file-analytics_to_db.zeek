@@ -64,7 +64,7 @@ global analysis_allowed_mime_types: set[string] = {
 
 global request_db = "/opt/db/request";
 
-event bro_init() {
+event zeek_init() {
   local filter: Log::Filter = [
     $name="sqlite",
     $path=request_db,

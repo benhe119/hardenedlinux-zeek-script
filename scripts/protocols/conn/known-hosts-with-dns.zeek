@@ -17,9 +17,9 @@
 # @ifndef(zeek_init)
 # #Running on old bro that doesn't know about zeek events
 # global zeek_init: event();
-# event bro_init()
+# event zeek_init()
 # {
-#     print("Entering zeek_init from bro_init");
+#     print("Entering zeek_init from zeek_init");
 #     event zeek_init();
 # }
 # @endif
@@ -176,7 +176,7 @@ event Known::host_found(info: HostsInfo){
 
 	@if ( ! Cluster::is_enabled() || Cluster::local_node_type() == Cluster::MANAGER )
 
-	# manager doesn't need it's own table after passing on the store in bro_init
+	# manager doesn't need it's own table after passing on the store in zeek_init
 	#Known::hosts[info$host] = info$name;
 
 	if ( ! Known::use_host_store){

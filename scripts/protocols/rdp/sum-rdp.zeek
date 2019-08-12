@@ -40,7 +40,7 @@ event rdp_connect_request: event(c: connection , cookie: string ){
 }
 
 
-event bro_init()
+event zeek_init()
     {
 	Log::create_stream(HLRDP::LOG, [$columns=Info, $ev=log_rdp, $path="sum_ssh"]);
     local r1 = SumStats::Reducer($stream="failed.rdp", $apply=set(SumStats::COUNTTABLE));

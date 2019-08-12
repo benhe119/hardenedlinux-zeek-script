@@ -34,7 +34,7 @@ global known_domains: set[string] &create_expire=1 day  &redef;
   global log_known_domains: event(rec: Info);
 }
 
-event bro_init()
+event zeek_init()
 {
   Log::create_stream(MOCYBER::UNIQDNS_LOG, [$columns=Info, $ev=log_known_domains, $path="known_domains"]);
   local f = Log::get_filter(MOCYBER::UNIQDNS_LOG, "default");

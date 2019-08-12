@@ -21,7 +21,7 @@ redef Kafka::kafka_conf = table(
 ["sasl.kerberos.principal"] = "metron@EXAMPLE.COM"
 );
 
-event bro_init() &priority=-10
+event zeek_init() &priority=-10
 {
 
 #smb_mapping

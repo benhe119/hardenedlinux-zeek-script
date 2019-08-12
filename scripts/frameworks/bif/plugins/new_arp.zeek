@@ -27,7 +27,7 @@ export {
 
 
 
-  event bro_init() &priority=5
+  event zeek_init() &priority=5
 {
 Log::create_stream(NEW_ARP::LOG, [$columns=Info, $ev=log_new_arp, $path="new-arp"]);
 }

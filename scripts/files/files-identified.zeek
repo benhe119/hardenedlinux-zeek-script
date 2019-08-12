@@ -27,7 +27,7 @@ export {
 	                       | /application\/x-executable/;
 }
 
-event bro_init()
+event zeek_init()
 	{
 	Log::add_filter(Files::LOG, [$name = "files-identified",
 	                             $path = "files_identified",

@@ -13,7 +13,7 @@ redef Kafka::kafka_conf = table(
 ["metadata.broker.list"] = "localhost:9200"
 );
 
-event bro_init() &priority=-10
+event zeek_init() &priority=-10
 {
 
 #smb_mapping
