@@ -1,4 +1,0 @@
-
-# @TEST-EXEC: bro -r single_mqtt_session.pcap %INPUT
-# @TEST-EXEC: btest-diff .stdout
-
