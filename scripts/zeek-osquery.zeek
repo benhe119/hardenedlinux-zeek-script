@@ -9,20 +9,32 @@ redef Kafka::tag_json = T;
 
 redef Kafka::kafka_conf = table(
 ["metadata.broker.list"] = "localhost:9200"
+
+# SASL_SSL configuration
+# ["metadata.broker.list"] = "10.220.170.120:29091,10.220.170.121:2901",
+# ["client.id"] = "Broker-1",
+# ["security.protocol"] = "SASL_SSL",
+# ["ssl.ca.location"] = "/data/kafka-ca/ca-cert",
+# ["ssl.certificate.location"] = "/data/kafka-ca/kafka.client.pem",
+# ["ssl.key.location"] = "/data/kafka-ca/kafka.client.key",
+# ["ssl.key.password"] = "zeek@123",
+# ["sasl.kerberos.keytab"] = "/data/kafka-ca/metron.headless.keytab",
+# ["sasl.kerberos.principal"] = "metron@EXAMPLE.COM"
 );
 
 
 event zeek_init() &priority=-10
   {
 
+
 ## update [[https://github.com/zeek/zeek-osquery/commit/d84f7f49267a61f5904f39a1deafcea6b9bef6e0][{Scenario} Detect SSH Hopping · zeek/zeek-osquery@d84f7f4]]
 ## Detect SSH Hopping
 
   ##osquery
-  local filter_osquery: Log::Filter = [
-$name = "osquery",
+local filter_osquery: Log::Filter = [
+  $name = "osquery",
   $writer = Log::WRITER_KAFKAWRITER,
-$path = "osquery"
+  $path = "osquery"
 ];
 Log::add_filter(osquery::LOG, filter_osquery);
 
