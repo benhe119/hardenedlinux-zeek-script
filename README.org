@@ -27,8 +27,10 @@ worker-1     worker  10.220.170.121   running   1784   12 Aug 02:49:31
 ** VirusTotal-Check
 - [X] [public]  [[file:scripts/files/known_hash.zeek]]
   - [X] [VT_API]  [[file:scripts/files/vt_check.zeek]]
-  - [X] [POSTGRESQL]  [[file:scripts/files/virustotal.zeek]] 
+  - [X] [POSTGRESQL]  [[file:scripts/files/virustotal.zeek] 
 
+- [X] [TEST_LOG] [[file:scripts/files/log]]
+ 
 Please see Install POSTGRESQL-analyzers:
 
 [[https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/INSTALL/analyzer.sh][Debian-GNU-Linux-Profiles/analyzer.sh at master · hardenedlinux/Debian-GNU-Linux-Profiles]]
