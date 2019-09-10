@@ -8,11 +8,11 @@ export {
 	
 	type HashInfo: record {
 
-		ts:           	 	time   		&log;
+        ts   : time   		&log;
 
-		host:           	addr   		&log;
+        host : addr   		&log;
 
-	  	hash: 			string 		&log 	&optional;
+        hash : string 		&log 	&optional;
 
 		# found_in_alexa:		bool 		&log;
 
@@ -26,6 +26,7 @@ export {
 	## operation.
 	const use_hash_store = T &redef;
 
+	## Holds the set of all known hashes.
     global hash_store: Cluster::StoreInfo;
 
 	## The Broker topic name to use for :zeek:see:`Known::hash_store`.
@@ -46,14 +47,15 @@ export {
 }
 
 
-function known_relay_topic(): string{
+function known_relay_topic(): string
+	{
 	local rval = Cluster::rr_topic(Cluster::proxy_pool, "known_rr_key");
 
 	if ( rval == "" )
 		# No proxy is alive, so relay via manager instead.
 		return Cluster::manager_topic;
 	return rval;
-}
+	}
 
 event zeek_init()
 	{
@@ -125,18 +127,20 @@ event Known::hash_found(info: HashInfo)
 
 
 
-event Known::manager_to_workers(myhash: set[string]){
+event Known::manager_to_workers(myhash: set[string])
+	{
 	for (hash in myhash){
 		add Known::hashes[hash];
 	}
-}
+	}
 
-event Known::send_known(){
+event Known::send_known()
+	{
 	Broker::publish(Cluster::worker_topic,Known::manager_to_workers,Known::stored_hash);
 	# kill it, no longer needed
 	Known::stored_hash = set();
 
-}
+	}
 
 
 event zeek_init()

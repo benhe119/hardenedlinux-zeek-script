@@ -29,7 +29,8 @@ export {
         av_names       : set[string] &log &optional;
     
 	};
-	
+
+	# point the jp path (we going to use jq to parse VT_result to josn format)
 	const jq: string = "/usr/local/bin/jq" &redef;
 
 	## This is your VirusTotal API key and *must* be supplied for this plugin to work.
@@ -65,7 +66,8 @@ function VirusTotal::parse_result(report: Report, result: string)
 	
 	local parts = split_string(result, /( ?\{|\}, )/);
 	#local top = split_string(result,/\}\},/);
-	
+
+	# parse VT_API-result to  virustotal_result.json file
 	local jq_result = Exec::Command($cmd=fmt("echo '%s' | %s '.' >> virustotal_result.json", result,jq));
 	
 	for ( i in parts )

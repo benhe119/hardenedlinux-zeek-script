@@ -27,7 +27,7 @@ worker-1     worker  10.220.170.121   running   1784   12 Aug 02:49:31
 ** VirusTotal-Check
 - [X] [public]  [[file:scripts/files/known_hash.zeek]]
   - [X] [VT_API]  [[file:scripts/files/vt_check.zeek]]
-  - [X] [POSTGRESQL]  [[file:scripts/files/virustotal.zeek] 
+  - [X] [POSTGRESQL]  [[file:scripts/files/virustotal.zeek]]
 
 - [X] [TEST_LOG] [[file:scripts/files/log]]
  
@@ -45,7 +45,7 @@ Please see Install POSTGRESQL-analyzers:
   - [[https://github.com/dopheide-esnet/zeek-known-hosts-with-dns/tree/master/scripts][zeek-known-hosts-with-dns/scripts at master · dopheide-esnet/zeek-known-hosts-with-dns]]
   - ~@unload protocols/conn/known-hosts~
   - setting/local_net_field.zeek  [Host_tracking = LOCAL_HOSTS/ALL_HOSTS]
--
+
 ** VXLAN
 - [ ] [TODO] [[file:scripts/vlan-info/vlan-data.zeek][VLAN_INFO]] 
   - Add area and adapted to known-hosts[LOCAL_HOSTS]
