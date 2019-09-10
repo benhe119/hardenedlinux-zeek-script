@@ -24,6 +24,13 @@ manager      manager 10.220.170.123   running   9214   12 Aug 02:49:28
 proxy-1      proxy   10.220.170.123   running   9264   12 Aug 02:49:29
 worker-1     worker  10.220.170.121   running   1784   12 Aug 02:49:31
 #+end_src
+** VirusTotal-Check
+- [X] [public] file:scripts/files/known_hash.zeek
+  - [X] []  file:scripts/files/vt_check.zeek
+  - [X] [POSTGRESQL]  file:scripts/files/virustotal.zeek
+Install POSTGRESQL-analyzers:
+[[https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/INSTALL/analyzer.sh][Debian-GNU-Linux-Profiles/analyzer.sh at master · hardenedlinux/Debian-GNU-Linux-Profiles]]
+
 ** Known/hosts/domains
 - [X] [[file:scripts/protocols/dns/known-domains.zeek]] :Cluster::worker <2019-08-10 Sat 02:36>
   - Test_log: [[file:scripts/protocols/dns/log/known_domain.log]]
