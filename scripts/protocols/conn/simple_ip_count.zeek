@@ -31,11 +31,11 @@ event connection_state_remove(c: connection)
   }
 
 
-event bro_done()
-  {
-  for ( ip in inside_networks)  {
-    print ip;
-    }
+# event bro_done()
+#   {
+#   for ( ip in inside_networks)  {
+#     print ip;
+#     }
 
-  print fmt ("Total connection %d", my_count);
-  }
+#   print fmt ("Total connection %d", my_count);
+#   }

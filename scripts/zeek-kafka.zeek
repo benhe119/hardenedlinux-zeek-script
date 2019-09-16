@@ -1,9 +1,9 @@
-@load /usr/local/bro/lib/bro/plugins/APACHE_KAFKA/scripts/Apache/Kafka
-@load /usr/local/bro/lib/bro/plugins/mitrecnd_HTTP2/scripts/http2
-@load /usr/local/bro/lib/bro/plugins/CBro_MQTT/scripts/
+@load /usr/local/zeek/lib/zeek/plugins/APACHE_KAFKA/scripts/Apache/Kafka
+@load /usr/local/zeek/lib/zeek/plugins/mitrecnd_HTTP2/scripts/http2
+@load /usr/local/zeek/lib/zeek/plugins/CBro_MQTT/scripts/
 @load ./protocols/
-@load policy/misc/stats.bro
-@load policy/protocols/conn/known-services.bro
+@load policy/misc/stats.zeek
+@load policy/protocols/conn/known-services.zeek
 @load ./files
 redef Kafka::topic_name = "";
 redef Kafka::tag_json = T;

@@ -20,7 +20,7 @@ event connection_state_remove(c: connection) &priority=-5
     }
   }
 
-event bro_done()
-  {
-  print fmt("SSH auth failures = %d", auth_failures);
-  }
+# event bro_done()
+#   {
+#   print fmt("SSH auth failures = %d", auth_failures);
+#   }
