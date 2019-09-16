@@ -1,7 +1,7 @@
 @load ../../frameworks/countabble.zeek
 
-
 module HSSH;
+
 export {
   redef enum Log::ID += { LOG };
 
@@ -39,7 +39,7 @@ event zeek_init()
 
 	}
 
-    event ssh_auth_failed(c:connection)
+event ssh_auth_failed(c:connection)
   {
   local id = c$ssh$client;
   SumStats::observe("failed.ssh", [$host=c$id$resp_h], [$str=id]);

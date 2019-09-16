@@ -10,15 +10,12 @@
 @load misc/detect-traceroute
 @load protocols/ssh/detect-bruteforcing
 
-@load ./tap-data.bro
-@load ./vlan-data.bro
+@load ./vlan-data.zeek
 
-module VLANLocation;
-
+module VLAN;
 export {
-
-   ## The set of notice types which should be augmented with VLAN information
-    global Notice::sampled_notes: set[Notice::Type] = {
+## The set of notice types which should be augmented with VLAN information
+    global Notice ::sampled_notes: set[Notice::Type] = {
         Scan::Address_Scan,
         Scan::Port_Scan,
         SSH::Password_Guessing

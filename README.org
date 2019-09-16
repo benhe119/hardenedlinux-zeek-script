@@ -13,6 +13,22 @@
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 * CHANGES
+- Quickly start
+#+begin_src sh :tangle yes
+    sudo pip install bro-pkg
+    ##zeek installation is owned by "root" user that was stored in /root/.bro-pkg
+    sudo zkg autoconfig
+    sudo zkg config script_dir
+    sudo zkg config plugin_dir
+    sudo zkg install https://github.com/hardenedlinux/hardenedlinux-zeek-script
+
+echo '@load packages' | sudo tee --append /usr/local/zeek/share/zeek/site/local.zeek
+
+#or @load packages/hardenedlinux-zeek-script
+sudo zeekctl deploy
+
+
+#+end_src
 - TEST Environment
 #+begin_src shell :tangle yes
 zeek -v

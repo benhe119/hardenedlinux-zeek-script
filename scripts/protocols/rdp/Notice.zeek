@@ -1,5 +1,4 @@
 @load base/frameworks/notice
-@load ./main.zeek
 @load base/protocols/rdp
 
 # [[https://packetstormsecurity.com/files/153133/Microsoft-Windows-Remote-Desktop-BlueKeep-Denial-Of-Service.html][Microsoft Windows Remote Desktop BlueKeep Denial Of Service ≈ Packet Storm]]
@@ -25,15 +24,16 @@ export {
 event rdp_client_network_data (c: connection, channels: RDP::ClientChannelList)
 
 {
-    for ( i in c$rdp$client_channels)
-        local channel_count;
-        ++channel_count;
-        if (c$rdp$client_channels[1] == "MS_T120" && channel_count < 6)
+    for ( i in c$rdp$client_channels){
+        local channel_count = 0;
+	++channel_count;
+        if (c$rdp$client_channels[i] == "MS_T120" && channel_count < 6)
             {
                 NOTICE([$note=Val_RDP_Channel_Name,
                 	$msg=fmt("CVE-2019-0708 - %s - %s", c$rdp$client_channels, c$rdp$client_build),
-                	$conn=c]);
+            		    	$conn=c]);
             }
+	    }
 }
 
 

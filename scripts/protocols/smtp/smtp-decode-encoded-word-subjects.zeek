@@ -2,13 +2,13 @@
 # Implements Encoded-word decoding (RFC2047)
 function decode_encoded_word(a: string): string
 	{
-	local parts = split_all(a, /\=\?[^\?]*\?[bBqQ]\?[^\?]*\?\=/);
+	local parts = split_string_all(a, /\=\?[^\?]*\?[bBqQ]\?[^\?]*\?\=/);
 	for ( i in parts )
 		{
 		if ( /\?[bB]\?/ in parts[i] )
 			{
 			# base64
-			local b_parts = split_all(parts[i], /(\?[bB]\?|\?\=$)/);
+			local b_parts = split_string_all(parts[i], /(\?[bB]\?|\?\=$)/);
 			parts[i] = decode_base64(b_parts[3]);
 			}
 		else if ( /\?[qQ]\?/ in parts[i] )
@@ -16,7 +16,7 @@ function decode_encoded_word(a: string): string
 			# quoted printable
 			parts[i] = gsub(parts[i], /_/, " ");
 			parts[i] = gsub(parts[i], /(^.*\?[qQ]\?|\?\=$)/, "");
-			local q_parts = split_all(parts[i], /\=[a-fA-F0-9]{2}/);
+			local q_parts = split_string_all(parts[i], /\=[a-fA-F0-9]{2}/);
 			for ( f in q_parts )
 				{
 				if ( q_parts[f] == /\=[a-fA-F0-9]{2}/ )
@@ -25,10 +25,10 @@ function decode_encoded_word(a: string): string
 					q_parts[f] = unescape_URI(q_parts[f]);
 					}
 				}
-			parts[i] = cat_string_array(q_parts);
+			parts[i] = join_string_vec(q_parts,"");
 			}
 		}
-	return cat_string_array(parts);
+	return join_string_vec(parts,"");
 	}
 
 redef record SMTP::Info  += {

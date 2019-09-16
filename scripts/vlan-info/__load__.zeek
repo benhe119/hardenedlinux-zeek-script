@@ -4,5 +4,4 @@
 
 # Periodically verifies if all configured taps are generating data
 
-@load ./vlan-location
-@load ./tap-verify
+@load ./vlan-location.zeek

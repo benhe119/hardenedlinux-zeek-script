@@ -1,4 +1,4 @@
-@load ./files-identified.bro
-@load ./ssdeep-tlsh.bro
+@load ./files-identified.zeek
+# @load ./ssdeep-tlsh.bro
 # before load script, add VirusTotal-API first.
-#@load ./vt_check.zeek
+@load ./vt_check.zeek

@@ -47,15 +47,15 @@ export {
 }
 
 
-function known_relay_topic(): string
-	{
-	local rval = Cluster::rr_topic(Cluster::proxy_pool, "known_rr_key");
+# function known_relay_topic(): string
+# 	{
+# 	local rval = Cluster::rr_topic(Cluster::proxy_pool, "known_rr_key");
 
-	if ( rval == "" )
-		# No proxy is alive, so relay via manager instead.
-		return Cluster::manager_topic;
-	return rval;
-	}
+# 	if ( rval == "" )
+# 		# No proxy is alive, so relay via manager instead.
+# 		return Cluster::manager_topic;
+# 	return rval;
+# 	}
 
 event zeek_init()
 	{

@@ -82,7 +82,6 @@ export {
 	## An event that can be handled to access the :bro:type:`Known::HostsInfo`
 	## record as it is sent on to the logging framework.
 	global Known::log_known_hosts: event(rec: HostsInfo);
-	global Known::manager_to_workers: event(myhosts: table[addr] of string);
 	global Known::worker_to_workers: event(newhost: HostsInfo);
 	global Known::send_known: event();
 	global Known::host_found: event(info: HostsInfo);
@@ -93,20 +92,7 @@ export {
 
 
 # concept stolen from scripts/base/protocols/irc/dcc-send.bro
-function known_relay_topic(): string{
-	local rval = Cluster::rr_topic(Cluster::proxy_pool, "known_rr_key");
 
-	if ( rval == "" )
-		# No proxy is alive, so relay via manager instead.
-		return Cluster::manager_topic;
-	return rval;
-}
-
-event Known::manager_to_workers(myhosts: table[addr] of string){
-	for (ip in myhosts){
-		Known::hosts[ip] = myhosts[ip];
-	}
-}
 
 event Known::worker_to_workers(newhost: HostsInfo){
 	# Must relay through proxies (or manager)
@@ -119,12 +105,6 @@ event Known::worker_to_workers(newhost: HostsInfo){
 @endif
 }
 
-event Known::send_known(){
-	Broker::publish(Cluster::worker_topic,Known::manager_to_workers,Known::stored_hosts);
-
-	# kill it, no longer needed
-	Known::stored_hosts = table();
-}
 
 event zeek_init(){
 

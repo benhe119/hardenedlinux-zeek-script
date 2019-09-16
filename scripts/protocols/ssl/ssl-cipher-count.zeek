@@ -3,6 +3,7 @@
 # TLS cipher suites for each host in the local network.
 # Original Scirpt:https://github.com/0xxon/bro-sumstats-counttable
 # modified by GTrunsec
+
 @load base/protocols/ssl
 @load ../../frameworks/countabble.zeek
 

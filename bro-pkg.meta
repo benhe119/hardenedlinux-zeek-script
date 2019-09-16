@@ -1,6 +1,6 @@
 [package]
-description = Harededlinux Bro script Repo
+description = Harededlinux zeek script Repo
 tags = private
 script_dir = scripts
 depends =
-    bro >=2.6.0
+    bro >=2.6.4

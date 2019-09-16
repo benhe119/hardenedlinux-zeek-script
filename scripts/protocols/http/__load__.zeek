@@ -1,2 +1,1 @@
-@load ./owasp
-@load ./qq_version.zeek
+@load ./http_ext.zeek
