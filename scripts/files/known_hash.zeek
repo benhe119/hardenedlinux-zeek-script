@@ -1,6 +1,5 @@
 @load base/frameworks/cluster
 @load frameworks/files/hash-all-files
-
 module Known;
 
 export {
@@ -8,13 +7,16 @@ export {
 	
 	type HashInfo: record {
 
-        ts   : time   		&log;
+        ts               : time   		&log;
 
-        host : addr   		&log;
+        host             : addr   		&log;
 
-        hash : string 		&log 	&optional;
+        hash             : string 		&log 	&optional;
 
-		# found_in_alexa:		bool 		&log;
+        known_file_types : string       &log    &optional;
+		
+		#find virtual_total permalink in posql
+		found_in_virtual_total:		bool 		&log;
 
 		# found_dynamic:		bool 		&log;
 	};
@@ -44,6 +46,9 @@ export {
 	## on to the logging framework.
 	global log_known_hash: event(rec: HashInfo);
 	global Known::known_hash_add: event(info: HashInfo);
+
+	const match_file_types = /application\/x-dosexec/ |
+                             /application\/x-executable/ &redef;
 }
 
 
@@ -152,13 +157,14 @@ event zeek_init()
 event file_hash(f: fa_file, kind: string, hash: string)
     {
         local downloader: addr = 0.0.0.0;
-        for ( host in f$info$rx_hosts )
-        {
-            downloader = host;
-            local info = HashInfo($ts = network_time(), $host = downloader, $hash = hash);
-            event Known::hash_found(info);
-            @if ( Cluster::is_enabled() && Cluster::local_node_type() == Cluster::WORKER )
-                Broker::publish(Cluster::manager_topic,Known::hash_found,[$ts = network_time(), $host = downloader, $hash = hash]);				
-            @endif
-        }
+        for ( host in f$info$rx_hosts)
+			if (f$info?$mime_type && (match_file_types in f$info$mime_type))
+			{
+				downloader = host;
+				local info = HashInfo($ts = network_time(), $host = downloader, $hash = hash, $known_file_types = f$info$mime_type);
+				event Known::hash_found(info);
+				@if ( Cluster::is_enabled() && Cluster::local_node_type() == Cluster::WORKER )
+					Broker::publish(Cluster::manager_topic,Known::hash_found,[$ts = network_time(), $host = downloader, $hash = hash, $known_file_types = f$info$mime_type]);				
+				@endif
+			}
     }

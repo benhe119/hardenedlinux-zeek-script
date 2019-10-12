@@ -34,7 +34,7 @@ export {
 	const jq: string = "/usr/local/bin/jq" &redef;
 
 	## This is your VirusTotal API key and *must* be supplied for this plugin to work.
-	const api_key = " " &redef;
+	const api_key = "" &redef;
 	
 	## Define the number of queries per minute that your API key can make.
 	const queries_per_minute = 4 &redef;

@@ -48,7 +48,7 @@ for ( i in counttable )
 event DHCP::log_dhcp(rec: DHCP::Info) {
 
 
-  if ( rec$assigned_addr in watched_nets ) {
+  if ( rec?$assigned_addr in watched_nets ) {
 
     local net: subnet;
     
@@ -62,7 +62,6 @@ event DHCP::log_dhcp(rec: DHCP::Info) {
 
       }
     }
-
   }
 
 }
