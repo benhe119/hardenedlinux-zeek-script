@@ -46,7 +46,9 @@ event file_hash(f: fa_file, kind: string, hash: string)
         {
         if (hash !in Known::hashes && hash !in virustotal_psql)
             {
-	    Input::add_event([$source="SELECT ts,hash FROM known_hash;", $name="VirusTotal", $fields=KnownHashType, $ev=line, $want_reco$
+	    Input::add_event([$source="SELECT ts,hash FROM known_hash;", $name="VirusTotal",
+	    $fields=KnownHashType,
+	    $ev=line,$want_record=T,
             $reader=Input::READER_POSTGRESQL,
             $config=table(["dbname"]="testdb",["hostname"]="localhost user=myuser password=mypass",["port"]="5432")]);
             when ( local info = VirusTotal::scan_hash(f, hash) )

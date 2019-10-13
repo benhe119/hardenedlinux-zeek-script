@@ -78,7 +78,7 @@ event Known::hash_found(info: HashInfo)
 		{
 		if ( r$status == Broker::SUCCESS )
 			{
-			if (info?$hash)
+			if (info?$hash && r$result as bool)
 				local hash_data = fmt("%s",info$hash as string);
 				add Known::hashes[hash_data];
 				Log::write(Known::HASH_LOG, info);

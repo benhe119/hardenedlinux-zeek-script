@@ -44,6 +44,25 @@ worker-1     worker  10.220.170.121   running   1784   12 Aug 02:49:31
 - [X] [public]  [[file:scripts/files/known_hash.zeek]]
   - [X] [VT_API]  [[file:scripts/files/vt_check.zeek]]
   - [X] [POSTGRESQL]  [[file:scripts/files/virustotal.zeek]]
+#+BEGIN_EXAMPLE
+psql -h localhost -p 5432 -U myuser -d testdb  -c 'SELECT * FROM known_hash;' 
+
+ id |        ts        |    host     |                   hash                   |   known_file_types    
+----+------------------+-------------+------------------------------------------+-----------------------
+  1 | 1570941985.53655 | 10.1.10.162 | 2dde1a34ac02478052b691bd18c89c7a13edc5f4 | application/x-dosexec
+  2 | 1570941985.53655 | 10.1.10.162 | 60ff5bfec4df9f809817423b23536601         | application/x-dosexec
+  3 | 1570941988.84281 | 10.1.10.162 | d25af249e01191f08f359b302db42414e0a4587e | application/x-dosexec
+  4 | 1570941988.84281 | 10.1.10.162 | 9cf60bd41e6f235e12e3c761f5d2ef11         | application/x-dosexec
+(4 rows)
+
+ psql -h localhost -p 5432 -U myuser -d testdb  -c 'SELECT permalink FROM virtustotal;' 
+
+                                                       permalink                                                       
+----------------------------------------------------------------------------------------------------------------
+ https://www.virustotal.com/file/fc7eafb97431c3f45a0ced2c38e869f768234897874317ffb0755eb920316294/analysis/1565393170/
+ https://www.virustotal.com/file/8021b619c48d9017a2c3b0beddb1b48d067be75551a44a9d8b79c1daff78ede0/analysis/1560568105/
+(2 rows)
+#+END_EXAMPLE
 
 - [X] [TEST_LOG] [[file:scripts/files/log]]
  
