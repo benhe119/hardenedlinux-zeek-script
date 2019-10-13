@@ -1,6 +1,5 @@
 @load base/frameworks/cluster
 @load frameworks/files/hash-all-files
-
 module Known;
 
 export {
@@ -8,14 +7,15 @@ export {
 	
 	type HashInfo: record {
 
-		ts:           	 	time   		&log;
+        ts               : time   		&log;
 
-		host:           	addr   		&log;
+        host             : addr   		&log;
 
-	  	hash: 			string 		&log 	&optional;
+        hash             : string 		&log 	&optional;
 
-		# found_in_alexa:		bool 		&log;
-
+        known_file_types : string       &log    &optional;
+		
+		#find virtual_total permalink in posql
 		# found_dynamic:		bool 		&log;
 	};
 	
@@ -26,6 +26,7 @@ export {
 	## operation.
 	const use_hash_store = T &redef;
 
+	## Holds the set of all known hashes.
     global hash_store: Cluster::StoreInfo;
 
 	## The Broker topic name to use for :zeek:see:`Known::hash_store`.
@@ -43,57 +44,64 @@ export {
 	## on to the logging framework.
 	global log_known_hash: event(rec: HashInfo);
 	global Known::known_hash_add: event(info: HashInfo);
+
+	const match_file_types = /application\/x-dosexec/ |
+                             /application\/x-executable/ &redef;
 }
 
 
-function known_relay_topic(): string{
-	local rval = Cluster::rr_topic(Cluster::proxy_pool, "known_rr_key");
+# function known_relay_topic(): string
+# 	{
+# 	local rval = Cluster::rr_topic(Cluster::proxy_pool, "known_rr_key");
 
-	if ( rval == "" )
-		# No proxy is alive, so relay via manager instead.
-		return Cluster::manager_topic;
-	return rval;
-}
-
-event zeek_init()
-	{
-	if ( ! Known::use_hash_store )
-		return;
-
-	Known::hash_store = Cluster::create_store(Known::hash_store_name);
-	}
+# 	if ( rval == "" )
+# 		# No proxy is alive, so relay via manager instead.
+# 		return Cluster::manager_topic;
+# 	return rval;
+# 	}
 
 event Known::hash_found(info: HashInfo)
-    {
-	if ( ! Known::use_hash_store )
-		return;
-@if ( ! Cluster::is_enabled() || Cluster::local_node_type() == Cluster::MANAGER )
 
-	when ( local r = Broker::put_unique(Known::hash_store$store, info$hash,
-	T, Known::hash_store_expiry) )
-		{
-		if ( r$status == Broker::SUCCESS )
-			{
-			if (info?$hash)
-				local hash_data = fmt("%s",info$hash as string);
-				add Known::hashes[hash_data];
+{
+    if ( ! Known::use_hash_store )
+                return;
+
+	Known::hash_store = Cluster::create_store(Known::hash_store_name,T);
+
+	@if ( ! Cluster::is_enabled() || Cluster::local_node_type() == Cluster::MANAGER )
+
+		when ( local r = Broker::keys(Known::hash_store$store)){
+			if ( r$status == Broker::SUCCESS ){
+
+				# Have to recast r$result as a set in order to work with it since
+				# it's a Broker::Data type.
+				for (hash in info$hash){
+					when ( local res = Broker::get(Known::hash_store$store,hash)){
+
+						@if ( ! Cluster::is_enabled() )
+						    
+							local hash_data = fmt("%s",info$hash as string);
+							add Known::hashes[hash_data];
+						@else
+							
+							local store_hash_data = fmt("%s",info$hash as string);
+							add Known::stored_hash[store_hash_data];
+						@endif
+
+					}timeout Known::hash_store_timeout{ }
+				}
 			}
-		else
-			Reporter::error(fmt("%s: data store put_unique failure",
-			Known::hash_store_name));
-		}
-	timeout Known::hash_store_timeout
-		{
-		# Can't really tell if master store ended up inserting a key.
-		Log::write(Known::HASH_LOG, info);
-		}
+		}timeout Known::hash_store_timeout { }
+
 		@if ( Cluster::local_node_type() == Cluster::MANAGER)
 			# essentially, we're waiting for the asynchronous Broker calls to finish populating
 			# the manager's Known::stored_hosts and then sending the table to the workers all at once
 			schedule 30sec {Known::send_known()};
 		@endif
-	@endif	
-    }
+
+	@endif
+
+}
 
 event known_hash_add(info: HashInfo)
 	{
@@ -106,7 +114,7 @@ event known_hash_add(info: HashInfo)
 	@if ( ! Cluster::is_enabled() ||
 	Cluster::local_node_type() == Cluster::PROXY ||
 	Cluster::local_node_type() == Cluster::MANAGER )
-	Broker::publish(Cluster::worker_topic, Known::known_hash_add, info$hash);
+	Broker::publish(Cluster::worker_topic, Known::known_hash_add, info);
 	@else
 		add Known::hash[info$hash];
 	@endif
@@ -126,40 +134,39 @@ event Known::hash_found(info: HashInfo)
 
 
 
-event Known::manager_to_workers(myhash: set[string]){
+event Known::manager_to_workers(myhash: set[string])
+	{
 	for (hash in myhash){
 		add Known::hashes[hash];
 	}
-}
+	}
 
-event Known::send_known(){
+event Known::send_known()
+	{
 	Broker::publish(Cluster::worker_topic,Known::manager_to_workers,Known::stored_hash);
 	# kill it, no longer needed
 	Known::stored_hash = set();
 
-}
+	}
 
 
 event zeek_init()
 	{
 	Log::create_stream(Known::HASH_LOG, [$columns=HashInfo, $ev=log_known_hash, $path="known_hash"]);
-# 	local filter: Log::Filter = [$name="known_hash", $path="known_hash", $writer=Log::WRITER_POSTGRESQL, $config=table([
-# "dbname"]="testdb",["hostname"]="localhost user=myuser password=mypass",["port"]="5432")];
-#     Log::add_filter(HASH_LOG, filter);
 	}
 
 
 event file_hash(f: fa_file, kind: string, hash: string)
     {
         local downloader: addr = 0.0.0.0;
-		#print hashes;
-        for ( host in f$info$rx_hosts )
-        {
-            downloader = host;
-            local info = HashInfo($ts = network_time(), $host = downloader, $hash = hash);
-            event Known::hash_found(info);
-            @if ( Cluster::is_enabled() && Cluster::local_node_type() == Cluster::WORKER )
-                Broker::publish(Cluster::manager_topic,Known::hash_found,[$ts = network_time(), $host = downloader, $hash = hash]);				
-            @endif
-        }
+        for ( host in f$info$rx_hosts)
+			if (f$info?$mime_type && (match_file_types in f$info$mime_type))
+			{
+				downloader = host;
+				local info = HashInfo($ts = network_time(), $host = downloader, $hash = hash, $known_file_types = f$info$mime_type);
+				event Known::hash_found(info);
+				@if ( Cluster::is_enabled() && Cluster::local_node_type() == Cluster::WORKER )
+					Broker::publish(Cluster::manager_topic,Known::hash_found,[$ts = network_time(), $host = downloader, $hash = hash, $known_file_types = f$info$mime_type]);				
+				@endif
+			}
     }

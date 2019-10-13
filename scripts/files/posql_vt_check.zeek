@@ -18,13 +18,24 @@ export {
     redef enum Notice::Type += {
         Match
     };
+    type KnownHashType: record {                                                                                                       
+    ts   : time;
+    hash : string;
+};
 
+
+    global virustotal_psql: set [string];
     ## Number of positive AV hits to do the Match notice.
     const hits_to_notice = 10 &redef;
 
     ## We want to check virustotal for files of the following types.
     const match_file_types = /application\/x-dosexec/ |
-                             /application\/x-executable/ &redef;
+                            /application\/x-executable/ &redef;
+}
+
+event line(description: Input::EventDescription, tpe: Input::Event, r: KnownHashType)
+{
+add virustotal_psql[r$hash];
 }
 
 event file_hash(f: fa_file, kind: string, hash: string)
@@ -33,8 +44,11 @@ event file_hash(f: fa_file, kind: string, hash: string)
     if ( kind == "sha1" && f$info?$mime_type &&
          match_file_types in f$info$mime_type )
         {
-        if (hash !in Known::hashes)
+        if (hash !in Known::hashes && hash !in virustotal_psql)
             {
+	    Input::add_event([$source="SELECT ts,hash FROM known_hash;", $name="VirusTotal", $fields=KnownHashType, $ev=line, $want_reco$
+            $reader=Input::READER_POSTGRESQL,
+            $config=table(["dbname"]="testdb",["hostname"]="localhost user=myuser password=mypass",["port"]="5432")]);
             when ( local info = VirusTotal::scan_hash(f, hash) )
             {
             if ( |info$hits| < hits_to_notice )

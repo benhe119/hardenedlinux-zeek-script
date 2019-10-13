@@ -47,6 +47,10 @@ export {
 # Help abide by the virus total query limits
 global query_limiter: set[string] &create_expire=1min;
 
+# event line(description: Input::EventDescription, tpe: Input::Event, r: KnownHashType)
+# {
+# print r;
+# }
 event zeek_init()
 	{
 	Log::create_stream(VirusTotal::LOG, [$columns=Report]);
@@ -55,6 +59,11 @@ event zeek_init()
 # 	local filter: Log::Filter = [$name="postgres", $path="virtustotal", $writer=Log::WRITER_POSTGRESQL, $config=table([
 # "dbname"]="testdb",["hostname"]="localhost user=myuser password=mypass",["port"]="5432")];
 #     Log::add_filter(VirusTotal::LOG, filter);
+
+   # Input::add_event([$source="SELECT ts,hash FROM known_hash;", $name="postgres", $fields=KnownHashType, $ev=line, $want_record=T,
+   #  $reader=Input::READER_POSTGRESQL,
+   #  $config=table(["dbname"]="testdb",["hostname"]="localhost user=myuser password=mypass",["port"]="5432")]); 
+
 	}
 
 function VirusTotal::parse_result(report: Report, result: string)
