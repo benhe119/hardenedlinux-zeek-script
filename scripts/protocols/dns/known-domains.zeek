@@ -75,8 +75,10 @@ event Known::domain_found(info: DomainsInfo)
 		{
 		if ( r$status == Broker::SUCCESS )
 			{
-			if ( r$result as bool )
-				Log::write(Known::DOMAIN_LOG, info);
+			if (info?$domain && r$result as bool )
+			local domain_data = fmt("%s",info$domain as string);
+			add Known::domains[domain_data];
+			Log::write(Known::DOMAIN_LOG, info);
 			}
 		else
 			Reporter::error(fmt("%s: data store put_unique failure",
@@ -126,7 +128,7 @@ event Cluster::node_up(name: string, id: string)
 		return;
 
 	# Drop local suppression cache on workers to force HRW key repartitioning.
-	Known::domains = table();
+	Known::domains = set();
 	}
 
 event Cluster::node_down(name: string, id: string)
@@ -138,7 +140,7 @@ event Cluster::node_down(name: string, id: string)
 		return;
 
 	# Drop local suppression cache on workers to force HRW key repartitioning.
-	Known::domains = table();
+	Known::domains = set();
 	}
 
 
@@ -167,6 +169,7 @@ event DNS::log_dns(rec: DNS::Info)
 {
 	if (! rec?$query)
         return;
+	print Known::domains;
 	local host = rec$id$orig_h;
 	for ( domain in set(rec$query) ){
 		if (domain !in Known::domains){
