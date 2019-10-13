@@ -169,7 +169,7 @@ event DNS::log_dns(rec: DNS::Info)
 {
 	if (! rec?$query)
         return;
-	print Known::domains;
+	#print Known::domains;
 	local host = rec$id$orig_h;
 	for ( domain in set(rec$query) ){
 		if (domain !in Known::domains){
