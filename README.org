@@ -13,7 +13,12 @@
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 * CHANGES
-- Quickly start
+ taking test with zeek -i ens
+ #+begin_src sh :async t :exports both :results output
+sudo zeek -i enp1s0 -C ~/project/hardenedlinux-zeek-script/scripts/local.zeek
+ #+end_src
+
+- Quickly start with zkg
 #+begin_src sh :tangle yes
     sudo pip install bro-pkg
     ##zeek installation is owned by "root" user that was stored in /root/.bro-pkg
