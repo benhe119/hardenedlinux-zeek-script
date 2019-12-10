@@ -6,7 +6,7 @@ module UniqueMacs;
 
 export {
 
-  global watched_nets: set[subnet] = [ 10.0.0.0/8, 192.168.0.0/16 ] &redef;    
+global watched_nets: set[subnet] = [ 10.0.0.0/8, 192.168.0.0/16 ] &redef;
 global epoch: interval = 1hr &redef;
 
 # Logging info
@@ -48,7 +48,7 @@ for ( i in counttable )
 event DHCP::log_dhcp(rec: DHCP::Info) {
 
 
-  if ( rec?$assigned_addr in watched_nets ) {
+  if ( rec$assigned_addr in watched_nets ) {
 
     local net: subnet;
     

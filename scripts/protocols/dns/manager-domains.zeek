@@ -62,15 +62,6 @@ export {
 }
 
 
-function known_relay_topic(): string{
-	local rval = Cluster::rr_topic(Cluster::proxy_pool, "known_rr_key");
-
-	if ( rval == "" )
-		# No proxy is alive, so relay via manager instead.
-		return Cluster::manager_topic;
-	return rval;
-}
-
 event zeek_init()
 	{
 	if ( ! Known::use_domain_store )
@@ -146,12 +137,9 @@ event Known::manager_to_workers(mydomains: set[string]){
 		add Known::domains[query];
 	}
 }
-event Known::send_known(){
-	Broker::publish(Cluster::worker_topic,Known::manager_to_workers,Known::stored_domains);
-	# kill it, no longer needed
-	Known::stored_domains = set();
 
-}
+
+
 event zeek_init()
 	{
 	Log::create_stream(Known::DOMAIN_LOG, [$columns=DomainsInfo, $ev=log_known_domains, $path="known_domains"]);

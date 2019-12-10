@@ -78,13 +78,13 @@ event Known::hash_found(info: HashInfo)
 		{
 		if ( r$status == Broker::SUCCESS )
 			{
-			if (info?$hash && r$result as bool)
+			if (info?$hash && r?$result as bool)
 				local hash_data = fmt("%s",info$hash as string);
-				add Known::hashes[hash_data];
-				Log::write(Known::HASH_LOG, info);
+                add Known::hashes[hash_data];
+			    Log::write(Known::HASH_LOG, info);
 			}
 		else
-			Reporter::error(fmt("%s: data store put_unique failure",
+            Reporter::error(fmt("%s: data store put_unique failure",
 			Known::hash_store_name));
 		}
 	timeout Known::hash_store_timeout
@@ -157,7 +157,7 @@ event zeek_init()
 event file_hash(f: fa_file, kind: string, hash: string)
     {
         local downloader: addr = 0.0.0.0;
-		print hashes;
+
         for ( host in f$info$rx_hosts )
 	if (f$info?$mime_type && (match_file_types in f$info$mime_type))
         {

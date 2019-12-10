@@ -1,6 +1,5 @@
 @load /usr/local/zeek/lib/zeek/plugins/APACHE_KAFKA/scripts/Apache/Kafka
 @load /usr/local/zeek/lib/zeek/plugins/mitrecnd_HTTP2/scripts/http2
-@load /usr/local/zeek/lib/zeek/plugins/CBro_MQTT/scripts/
 @load ./protocols/
 @load policy/misc/stats.zeek
 @load policy/protocols/conn/known-services.zeek
@@ -10,7 +9,7 @@ redef Kafka::tag_json = T;
 
 
 redef Kafka::kafka_conf = table(
-["metadata.broker.list"] = "localhost:9200"
+["metadata.broker.list"] = "localhost:9092"
 # SASL_SSL configuration
 # ["metadata.broker.list"] = "10.220.170.120:29091,10.220.170.121:2901",
 # ["client.id"] = "Broker-1",
@@ -71,6 +70,16 @@ local filter_smb_files: Log::Filter = [
     $path = "smb_files"
 ];
 Log::add_filter(SMB::FILES_LOG, filter_smb_files );
+
+#files
+local kafka_files: Log::Filter = [
+    $name = "kafka_files",
+    $writer = Log::WRITER_KAFKAWRITER,
+    $path = "files"
+];
+Log::add_filter(Files::LOG, kafka_files);
+
+
 #files_identified
 local filter_files: Log::Filter = [
     $name = "filter_files",
@@ -170,13 +179,31 @@ local filter_top_dns: Log::Filter = [
     $path = "top_dns"
 ];
 Log::add_filter(TopDNS::LOG,filter_top_dns );
-## mqtt
-local filter_mqtt : Log::Filter = [
-    $name = "mqtt",
+
+#MQTT::subscribe
+local filter_mqtt_subscribe : Log::Filter = [
+    $name = "mqtt_subscribe",
     $writer = Log::WRITER_KAFKAWRITER,
-    $path = "mqtt"
+    $path = "mqtt_subscribe"
 ];
-Log::add_filter(MQTT::LOG, filter_mqtt);
+Log::add_filter(MQTT::SUBSCRIBE_LOG, filter_mqtt_subscribe);
+
+#MQTT::publish
+local filter_mqtt_publish : Log::Filter = [
+    $name = "mqtt_publish",
+    $writer = Log::WRITER_KAFKAWRITER,
+    $path = "mqtt_publish"
+];
+Log::add_filter(MQTT::PUBLISH_LOG, filter_mqtt_publish);
+
+#MQTT::connect
+local filter_mqtt_connect : Log::Filter = [
+    $name = "mqtt_connect",
+    $writer = Log::WRITER_KAFKAWRITER,
+    $path = "mqtt_connect"
+];
+Log::add_filter(MQTT::CONNECT_LOG, filter_mqtt_connect);
+
 ## Http2
 local filter_http2: Log::Filter = [
     $name = "http2",
@@ -184,21 +211,32 @@ local filter_http2: Log::Filter = [
     $path = "http2"
 ];
 Log::add_filter(HTTP2::LOG, filter_http2 );
+
+
 ##protocols-stats-resp
-local protocols_resp: Log::Filter = [
-    $name = "protocols-resp",
-    $writer = Log::WRITER_KAFKAWRITER,
-    $path = "protocols-resp"
-];
-Log::add_filter(ProtocolStats::RESP, protocols_resp);
+# local protocols_resp: Log::Filter = [
+#     $name = "protocols-resp",
+#     $writer = Log::WRITER_KAFKAWRITER,
+#     $path = "protocols-resp"
+# ];
+# Log::add_filter(ProtocolStats::RESP, protocols_resp);
 
 ##protocols-stats-orig
-local protocols_orig: Log::Filter = [
-    $name = "protocols-o",
+# local protocols_orig: Log::Filter = [
+#     $name = "protocols-o",
+#     $writer = Log::WRITER_KAFKAWRITER,
+#     $path = "protocols-orig"
+# ];
+# Log::add_filter(ProtocolStats::ORIG, protocols_orig);
+
+##TrafficsSummary::LOG
+local resp_summary: Log::Filter = [
+    $name = "resp-summary",
     $writer = Log::WRITER_KAFKAWRITER,
-    $path = "protocols-orig"
+    $path = "resp-summary"
 ];
-Log::add_filter(ProtocolStats::ORIG, protocols_orig);
+Log::add_filter(RespTrafficSummary::LOG, resp_summary);
+
 
 ##ssl_ciphers
 local ssl_ciphers: Log::Filter = [
@@ -318,4 +356,54 @@ local conn_host: Log::Filter = [
     $path = "unique-host"
 ];
 Log::add_filter(UniqueHosts::LOG, conn_host);
+
+
+#ntlm
+local kafka_ntlm: Log::Filter = [
+    $name = "kafka_ntml",
+    $writer = Log::WRITER_KAFKAWRITER,
+    $path = "ntml"
+];
+Log::add_filter(NTLM::LOG, kafka_ntlm);
+
+
+
+
+#ntp
+local kafka_ntp: Log::Filter = [
+    $name = "kafka_ntp",
+    $writer = Log::WRITER_KAFKAWRITER,
+    $path = "ntp"
+];
+Log::add_filter(NTP::LOG, kafka_ntp);
+
+
+
+#dpd
+
+local kafka_dpd: Log::Filter = [
+    $name = "kafka_dpd",
+    $writer = Log::WRITER_KAFKAWRITER,
+    $path = "dpd"
+];
+Log::add_filter(DPD::LOG, kafka_dpd);
+
+
+#weird
+local kafka_weird: Log::Filter = [
+    $name = "kafka_weird",
+    $writer = Log::WRITER_KAFKAWRITER,
+    $path = "werid"
+];
+Log::add_filter(Weird::LOG, kafka_weird);
+
+
+
+#reporter
+local kafka_reporter: Log::Filter = [
+    $name = "kafka_reporter",
+    $writer = Log::WRITER_KAFKAWRITER,
+    $path = "reporter"
+];
+Log::add_filter(Reporter::LOG, kafka_reporter);
 }

@@ -85,3 +85,20 @@ Please see Install POSTGRESQL-analyzers:
 - [ ] [TODO] [[file:scripts/vlan-info/vlan-data.zeek][VLAN_INFO]] 
   - Add area and adapted to known-hosts[LOCAL_HOSTS]
 
+
+
+
+** Notice
+*** Setting
+IGNORE - Ignores the notice and won't even log it.
+#+begin_src sh :async t
+SSL::Invalid_Server_Cert
+#+end_src
+** Count & TOPK
+- [X] [15mins] TOP dns
+- [ ] [] TOP Unknow HTTP request
+- [ ] [] TOP metrics
+  :top_size count 20
+  :talker_bin_size = 10000;
+  - [ ] [10sec] TOP urls
+  - [ ] [10sec] [] TOP talks

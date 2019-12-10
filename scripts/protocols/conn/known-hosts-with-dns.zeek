@@ -45,28 +45,28 @@ export {
 	## When true, use a Broker data store, else use a regular Bro set
 	## with keys uniformly distributed over proxy nodes in cluster
 	## operation.
-	const use_host_store = T &redef;
+	option use_host_store = T &redef;
 	
         ## The hosts whose existence should be logged and tracked.
         ##  Choices are: LOCAL_HOSTS, REMOTE_HOSTS, ALL_HOSTS, NO_HOSTS.
 
-	const host_tracking = LOCAL_HOSTS &redef;
+	option host_tracking = LOCAL_HOSTS &redef;
 
 	## Holds the set of all known hosts.  Keys in the store are addresses
 	## and their associated value will always be the "true" boolean.
 	global host_store: Cluster::StoreInfo;
 
 	## The Broker topic name to use for :bro:see:`Known::host_store`.
-	const host_store_name = "zeek/known/hosts" &redef;
+	option host_store_name = "zeek/known/hosts" &redef;
 
 	## The expiry interval of new entries in :bro:see:`Known::host_store`.
 	## This also changes the interval at which hosts get logged.
-	const host_store_expiry = 1day &redef;
+	option host_store_expiry = 1day &redef;
 
 	## The timeout interval to use for operations against
 	## :bro:see:`Known::host_store`.
-	const host_store_timeout = 15sec &redef;
-	const dns_timeout = 10sec &redef;
+	option host_store_timeout = 15sec &redef;
+	option dns_timeout = 10sec &redef;
 
 	## The set of all known addresses to store for preventing duplicate 
 	## logging of addresses.  It can also be used from other scripts to 
