@@ -1,7 +1,7 @@
 ##! Local site policy. Customize as appropriate.
 ##!
 ##! This file will not be overwritten when upgrading or reinstalling!
-@load ./zeek-kafka.zeek
+#@load ./zeek-kafka.zeek
 @load ../setting/local_net_field.zeek
 
 # This script logs which scripts were loaded during each run.
