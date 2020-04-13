@@ -3,6 +3,7 @@
 @load ./protocols/
 @load policy/misc/stats.zeek
 @load policy/protocols/conn/known-services.zeek
+@load policy/protocols/mqtt
 @load ./files
 redef Kafka::topic_name = "";
 redef Kafka::tag_json = T;
@@ -31,7 +32,7 @@ local filter_virus_total: Log::Filter = [
   $writer = Log::WRITER_KAFKAWRITER,
   $path = "virustotal"
 ];
-Log::add_filter (VirusTotal::LOG, filter_virus_total);   
+Log::add_filter (VirusTotal::LOG, filter_virus_total);
 # Known::hash
 local filter_known_hash: Log::Filter = [
   $name = "known_hash",
