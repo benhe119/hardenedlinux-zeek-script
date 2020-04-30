@@ -26,11 +26,22 @@ deploy-home-manager -c ## to check each service of NSM status
 
 
 or Do a kafka topics test.
-`sudo zeek -i <enth> <hardnedlinux-zeek-script>/scirpts/local.zeek`
 
-file:img/index-topics.png
+#+BEGIN_EXAMPLE
+sudo zeek -i <enth> <hardnedlinux-zeek-script>/scirpts/local.zeek
+#+END_EXAMPLE
 
-file:img/index-topics.png
+#+NAME: topics
+#+CAPTION: test
+#+ATTR_ORG: :width 500
+#+ATTR_LATEX: :width 5in
+[[file:img/index-topics.png]]
+
+#+NAME: Topics
+#+CAPTION:
+#+ATTR_ORG: :width 500
+#+ATTR_LATEX: :width 5in
+[[file:img/topics.png]]
 
 * CHANGES
  taking test with zeek -i ens
