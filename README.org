@@ -12,12 +12,35 @@
 #+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
+* Deploy Zeek kafka topics with Nix home-manager on Debian(OS)
+- get more information: https://github.com/hardenedlinux/debian-nix-manager
+
+
+#+begin_src sh :async t :exports both :results output
+home-manager switch
+deploy-home-manager -s ## to start each service of NSM status
+deploy-home-manager -c ## to check each service of NSM status
+#+end_src
+
+- Then Zeekctl deploy Zeek's cluster
+
+
+or Do a kafka topics test.
+`sudo zeek -i <enth> <hardnedlinux-zeek-script>/scirpts/local.zeek`
+[[file:img/index-topics.png][Zeek Topics]]
+
+[[file:img/index-topics.png][Index-Topics]]
+
 * CHANGES
  taking test with zeek -i ens
+
  #+begin_src sh :async t :exports both :results output
 sudo zeek -i enp1s0 -C ~/project/hardenedlinux-zeek-script/scripts/local.zeek
  #+end_src
+
 - using nix env do zeek quickly. more information: https://github.com/hardenedlinux/NSM-data-analysis
+
+
 #+begin_src sh :async t :exports both :results output
  cd NSM-data-analysis/
  mkdir -p zeek-log
@@ -26,6 +49,8 @@ sudo zeek -i enp1s0 -C ~/project/hardenedlinux-zeek-script/scripts/local.zeek
 #+end_src
 
 - Quickly start with zkg
+
+
 #+begin_src sh :tangle yes
     sudo pip install bro-pkg
     ##zeek installation is owned by "root" user that was stored in /root/.bro-pkg
@@ -41,7 +66,10 @@ sudo zeekctl deploy
 
 
 #+end_src
+
 - TEST Environment
+
+
 #+begin_src shell :tangle yes
 zeek -v
 zeek version 3.0.0-rc1
@@ -52,10 +80,17 @@ manager      manager 10.220.170.123   running   9214   12 Aug 02:49:28
 proxy-1      proxy   10.220.170.123   running   9264   12 Aug 02:49:29
 worker-1     worker  10.220.170.121   running   1784   12 Aug 02:49:31
 #+end_src
+
 ** VirusTotal-Check
 - [X] [public]  [[file:scripts/files/known_hash.zeek]]
+
   - [X] [VT_API]  [[file:scripts/files/vt_check.zeek]]
+
+
+
   - [X] [POSTGRESQL]  [[file:scripts/files/virustotal.zeek]]
+
+
 #+BEGIN_EXAMPLE
 psql -h localhost -p 5432 -U myuser -d testdb  -c 'SELECT * FROM known_hash;' 
 
@@ -77,40 +112,68 @@ psql -h localhost -p 5432 -U myuser -d testdb  -c 'SELECT * FROM known_hash;'
 #+END_EXAMPLE
 
 - [X] [TEST_LOG] [[file:scripts/files/log]]
- 
-Please see Install POSTGRESQL-analyzers:
+
+
+ Please see Install POSTGRESQL-analyzers:
 
 [[https://github.com/hardenedlinux/Debian-GNU-Linux-Profiles/blob/master/NSM/INSTALL/analyzer.sh][Debian-GNU-Linux-Profiles/analyzer.sh at master · hardenedlinux/Debian-GNU-Linux-Profiles]]
 
 ** Known/hosts/domains
 - [X] [[file:scripts/protocols/dns/known-domains.zeek]] :Cluster::worker <2019-08-10 Sat 02:36>
+
   - Test_log: [[file:scripts/protocols/dns/log/known_domain.log]]
+
+
+
 - [X] [[file:scripts/protocols/dns/manager-domains.zeek]]  :Cluster::manager
+
     - [[file:scripts/protocols/dns/log/manager_known_domain.log]]
-   - add TEST ignore_dns list 
+
+
+
+   - add TEST ignore_dns list
+
+
 - [X]  [[file:scripts/protocols/conn/known-hosts-with-dns.zeek]]
+
   - [[https://github.com/dopheide-esnet/zeek-known-hosts-with-dns/tree/master/scripts][zeek-known-hosts-with-dns/scripts at master · dopheide-esnet/zeek-known-hosts-with-dns]]
+
+
+
   - ~@unload protocols/conn/known-hosts~
+
+
   - setting/local_net_field.zeek  [Host_tracking = LOCAL_HOSTS/ALL_HOSTS]
+
 
 ** VXLAN
 - [ ] [TODO] [[file:scripts/vlan-info/vlan-data.zeek][VLAN_INFO]] 
-  - Add area and adapted to known-hosts[LOCAL_HOSTS]
 
+  - Add area and adapted to known-hosts[LOCAL_HOSTS]
 
 
 
 ** Notice
 *** Setting
 IGNORE - Ignores the notice and won't even log it.
+
 #+begin_src sh :async t
 SSL::Invalid_Server_Cert
 #+end_src
+
 ** Count & TOPK
 - [X] [15mins] TOP dns
+
+
 - [ ] [] TOP Unknow HTTP request
+
+
 - [ ] [] TOP metrics
   :top_size count 20
   :talker_bin_size = 10000;
+
   - [ ] [10sec] TOP urls
+
+
+
   - [ ] [10sec] [] TOP talks
